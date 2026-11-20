@@ -1,0 +1,8 @@
+cd /tmp
+pwd
+cd /
+pwd
+cd
+cd /olmayan/dizin
+cd a b
+pwd

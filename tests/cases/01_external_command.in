@@ -1,0 +1,4 @@
+echo merhaba
+echo   bir 	 iki		uc   
+printf %s| a b c
+exit

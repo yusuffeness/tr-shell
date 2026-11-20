@@ -17,7 +17,12 @@
 
 void ui_init(void)
 {
-    g_shell.use_color = isatty(STDOUT_FILENO);
+    /*
+     * Girdi bir dosyadan ya da pipe'tan geliyorsa (ör. testler) shell
+     * etkileşimsiz çalışır: istem, açılış ve kapanış mesajı yazılmaz.
+     */
+    g_shell.interactive = isatty(STDIN_FILENO);
+    g_shell.use_color = isatty(STDOUT_FILENO) && getenv("NO_COLOR") == NULL;
 }
 
 void ui_banner(void)

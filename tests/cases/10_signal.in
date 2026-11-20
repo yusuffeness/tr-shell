@@ -1,0 +1,2 @@
+sh tests/helpers/selfkill.sh
+echo hayatta

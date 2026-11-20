@@ -15,6 +15,7 @@
 
 struct shell g_shell = {
     .last_status = 0,
+    .interactive = 0,
     .use_color   = 0,
     .running     = 1,
 };
@@ -25,14 +26,17 @@ int main(void)
     char *argv[MAX_ARGS];
 
     ui_init();
-    ui_banner();
+    if (g_shell.interactive)
+        ui_banner();
 
     while (g_shell.running) {
-        ui_prompt();
+        if (g_shell.interactive)
+            ui_prompt();
 
         int r = input_read_line(line, sizeof line);
-        if (r == 0) {           /* Ctrl+D */
-            putchar('\n');
+        if (r == 0) {           /* Ctrl+D ya da dosya sonu */
+            if (g_shell.interactive)
+                putchar('\n');
             break;
         }
         if (r < 0) {            /* satır çok uzun */
@@ -54,6 +58,7 @@ int main(void)
         executor_run(argv);
     }
 
-    ui_goodbye();
+    if (g_shell.interactive)
+        ui_goodbye();
     return g_shell.last_status;
 }

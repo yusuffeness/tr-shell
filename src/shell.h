@@ -13,6 +13,7 @@
 
 struct shell {
     int last_status;    /* son komutun çıkış kodu (0 = başarılı) */
+    int interactive;    /* girdi bir terminalden geliyorsa 1 */
     int use_color;      /* çıktı terminale gidiyorsa 1 */
     int running;        /* 0 olunca ana döngü biter */
 };

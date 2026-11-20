@@ -1,0 +1,2 @@
+# Windows'ta düzenlense bile satır sonları LF kalsın; testler bayt bayt karşılaştırılıyor.
+* text=auto eol=lf

@@ -2,6 +2,7 @@
 #
 #   make            derle (build/ altına, çıktı: ./trsh)
 #   make run        derle ve çalıştır
+#   make test       davranış testlerini çalıştır
 #   make debug      AddressSanitizer + UBSan ile hata ayıklama sürümü
 #   make install    ~/.local/bin altına kur (PREFIX ile değiştirilebilir)
 #   make uninstall  kurulumu kaldır
@@ -25,7 +26,7 @@ SRCS := $(wildcard $(SRC_DIR)/*.c)
 OBJS := $(SRCS:$(SRC_DIR)/%.c=$(BUILD)/%.o)
 DEPS := $(OBJS:.o=.d)
 
-.PHONY: all run debug install uninstall clean
+.PHONY: all run test debug install uninstall clean
 
 all: $(TARGET)
 
@@ -40,6 +41,9 @@ $(BUILD):
 
 run: $(TARGET)
 	./$(TARGET)
+
+test: $(TARGET)
+	bash tests/run.sh
 
 debug:
 	$(MAKE) clean
