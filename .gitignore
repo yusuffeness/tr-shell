@@ -1,0 +1,12 @@
+# derleme ciktilari
+/build/
+/trsh
+*.o
+*.d
+
+# test ciktilari
+/tests/cikti/
+
+# editor
+.vscode/
+*.swp
