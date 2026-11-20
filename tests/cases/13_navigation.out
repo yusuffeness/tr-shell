@@ -3,7 +3,7 @@ geri: önceki dizin yok
 /tmp
 /tmp
 /usr
-/tmp
+/tmp/trsh-home
 gec: /olmayan: böyle bir dosya ya da dizin yok
 gec: çok fazla argüman
 geri: çok fazla argüman

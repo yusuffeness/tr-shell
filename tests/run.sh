@@ -30,13 +30,17 @@ else
 fi
 
 # A fixed environment keeps the output identical on every machine.
+# Each test gets a fresh, empty home directory.
+TEST_HOME=/tmp/trsh-home
+
 run_trsh() {
-    env -u OLDPWD HOME=/tmp LC_ALL=C NO_COLOR=1 timeout 10 "$TRSH"
+    rm -rf "$TEST_HOME" && mkdir -p "$TEST_HOME"
+    env -u OLDPWD HOME="$TEST_HOME" LC_ALL=C NO_COLOR=1 timeout 10 "$TRSH"
 }
 
 pass=0 fail=0 updated=0
 diff_file=$(mktemp)
-trap 'rm -f "$diff_file"' EXIT
+trap 'rm -f "$diff_file"; rm -rf "$TEST_HOME"' EXIT
 cd "$ROOT" || exit 2
 
 for in_file in "$CASES"/*.in; do

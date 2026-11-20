@@ -9,6 +9,7 @@
 #include "executor.h"
 #include "messages.h"
 #include "shell.h"
+#include "theme.h"
 #include "ui.h"
 
 static int bi_yardim(int argc, char **argv);
@@ -81,6 +82,10 @@ static const struct command table[] = {
 
     BUILTIN("yardim", bi_yardim, G_SHELL,
             "yardim [KOMUT]", "Komutları listeler ya da bir komutu açıklar"),
+    BUILTIN("tema", bi_tema, G_SHELL,
+            "tema [AD]", "Temaları listeler ya da temayı değiştirir"),
+    BUILTIN("temizle", bi_temizle, G_SHELL,
+            "temizle", "Ekranı temizler"),
     BUILTIN("hakkinda", bi_hakkinda, G_SHELL,
             "hakkinda", "Sürüm ve yazar bilgisi"),
     BUILTIN("cikis", bi_exit, G_SHELL,

@@ -7,8 +7,12 @@
 #ifndef TRSH_MESSAGES_H
 #define TRSH_MESSAGES_H
 
-#define MSG_BANNER_HINT     "Çıkmak için 'cikis' yazın ya da Ctrl+D'ye basın. Komutlar için 'yardim'."
+#define MSG_BANNER_HINT     "Komutlar için 'yardim', çıkmak için 'cikis' yazın."
+#define MSG_TIP_HELP        "Komutları görmek için"
+#define MSG_TIP_THEME       "Temayı değiştirmek için"
+#define MSG_TIP_EXIT        "Çıkmak için"
 #define MSG_GOODBYE         "Görüşmek üzere!"
+#define MSG_SECONDS         "sn"
 
 #define MSG_LINE_TOO_LONG   "satır çok uzun (en fazla %d karakter)"
 #define MSG_TOO_MANY_ARGS   "çok fazla argüman (en fazla %d)"
@@ -18,6 +22,8 @@
 #define MSG_NO_OLDPWD       "önceki dizin yok"
 #define MSG_NO_HOME         "ev dizini (HOME) tanımlı değil"
 #define MSG_UNKNOWN_HELP    "böyle bir komut yok: %s"
+#define MSG_UNKNOWN_THEME   "böyle bir tema yok: %s ('tema' ile listeleyin)"
+#define MSG_THEME_SET       "Tema: %s"
 
 #define MSG_HELP_TITLE      "tr-shell komutları"
 #define MSG_HELP_DETAIL     "Ayrıntı için: yardim KOMUT"

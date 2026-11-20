@@ -27,6 +27,8 @@ Sistem
 
 Kabuk
   yardim     Komutları listeler ya da bir komutu açıklar
+  tema       Temaları listeler ya da temayı değiştirir
+  temizle    Ekranı temizler
   hakkinda   Sürüm ve yazar bilgisi
   cikis      Kabuktan çıkar
   cd         Dizin değiştirir (gec'in klasik hâli)

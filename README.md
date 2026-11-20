@@ -6,20 +6,51 @@ tr-shell started as an Operating Systems course assignment and is being grown in
 complete, everyday-usable shell. It is a hands-on project around the classic process
 APIs: `fork`, `execvp`, `waitpid`, `pipe`, `dup2` and signals.
 
-> **Status:** v0.2 — Turkish commands. See [ROADMAP.md](ROADMAP.md) for what comes next.
+> **Status:** v0.3 — look and feel. See [ROADMAP.md](ROADMAP.md) for what comes next.
+
+```text
+╭────────────────────────────────────────────────────────────────╮
+│                                                                │
+│   ████████╗██████╗ ███████╗██╗  ██╗                            │
+│   ╚══██╔══╝██╔══██╗██╔════╝██║  ██║   tr-shell 0.3.0           │
+│      ██║   ██████╔╝███████╗███████║   Yusuf Enes Kütük         │
+│      ██║   ██╔══██╗╚════██║██╔══██║                            │
+│      ██║   ██║  ██║███████║██║  ██║   ~/projects/tr-shell      │
+│      ╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝   Cuma, 20 Kasım · 13:01   │
+│                                                                │
+│   ✦ Komutları görmek için     yardim                           │
+│   ✦ Temayı değiştirmek için   tema mor                         │
+│   ✦ Çıkmak için               cikis                            │
+│                                                                │
+╰────────────────────────────────────────────────────────────────╯
+
+╭─ Yusuf Enes Kütük · ~/projects/tr-shell · ⎇ main · 13:01
+╰─❯ sleep 2
+
+╭─ Yusuf Enes Kütük · ~/projects/tr-shell · ⎇ main · 13:01  ✓ 2,0 sn
+╰─❯ olmayan
+olmayan: komut bulunamadı
+
+╭─ Yusuf Enes Kütük · ~/projects/tr-shell · ⎇ main · 13:01  ✗ 127
+╰─❯
+```
 
 ## Features
 
-- Turkish commands next to the usual ones — `ls`, `git`, `gcc` and everything else
+- **Its own screen.** Opens on the terminal's alternate screen like `vim` or `less`;
+  your previous terminal output comes back when you leave
+- **Welcome box** with logo, version, directory and date (a plain header on narrow
+  terminals)
+- **Two-line prompt** with directory, git branch and time; ✓ or ✗ with the exit code
+  after each command, and the duration of commands that take a second or more
+- **Themes:** `tema mor` switches the accent color and remembers it
+- **Turkish commands** next to the usual ones — `ls`, `git`, `gcc` and everything else
   in your `PATH` still work
-- Built-in help: `yardim` lists every command, `yardim KOMUT` explains one
-- Runs external programs in a child process (`fork` + `execvp` + `waitpid`)
+- **Built-in help:** `yardim` lists every command, `yardim KOMUT` explains one
 - Turkish messages, including common system errors
-- Colored prompt with the current directory (`~` for home) and the last exit
-  status when it is non-zero
-- Reports children killed by a signal (e.g. `Killed`)
-- Non-interactive mode when input comes from a file or a pipe
-- Respects `NO_COLOR`
+- Runs external programs in a child process (`fork` + `execvp` + `waitpid`) and
+  reports children killed by a signal
+- Non-interactive mode when input comes from a file or a pipe; respects `NO_COLOR`
 
 ## Commands
 
@@ -45,6 +76,8 @@ APIs: `fork`, `execvp`, `waitpid`, `pipe`, `dup2` and signals.
 | | `kimim` | Current user | `whoami` |
 | | `tarih` | Date and time in Turkish | builtin |
 | Shell | `yardim [CMD]` | Help | builtin |
+| | `tema [NAME]` | List themes or switch: `mavi`, `yesil`, `mor`, `turuncu`, `sade` | builtin |
+| | `temizle` | Clear the screen | builtin |
 | | `hakkinda` | Version and author | builtin |
 | | `cikis` / `exit` | Leave the shell | builtin |
 | | `cd DIR` | Classic change directory | builtin |
@@ -65,19 +98,9 @@ make debug    # builds with AddressSanitizer and UBSan
 make install  # installs to ~/.local/bin (override with PREFIX=...)
 ```
 
-```text
-$ ./trsh
-tr-shell 0.2.0 - Yusuf Enes Kütük
-Çıkmak için 'cikis' yazın ya da Ctrl+D'ye basın. Komutlar için 'yardim'.
-
-Yusuf Enes Kütük ~> gec /tmp
-Yusuf Enes Kütük /tmp> geri
-/home/enes
-Yusuf Enes Kütük ~> oku yok.txt
-cat: yok.txt: No such file or directory
-Yusuf Enes Kütük ~ [1]> cikis
-Görüşmek üzere!
-```
+For the box and logo to line up, use a terminal font with box-drawing characters
+(Windows Terminal with Cascadia Code, iTerm2, GNOME Terminal and most modern
+terminals work out of the box).
 
 ## Project layout
 
@@ -90,7 +113,9 @@ src/
   executor.c    fork / exec / wait
   parser.c      splitting a line into arguments
   input.c       reading a line
-  ui.c          colors, banner, prompt, error output
+  ui.c          alternate screen, banner, prompt, error output
+  theme.c       color themes and the `tema` command
+  git.c         git branch for the prompt
   messages.c/h  all user-facing text
 tests/
   run.sh        test runner

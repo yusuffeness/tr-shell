@@ -6,8 +6,8 @@ The project is built in nine phases. Each phase ends with one commit and a versi
 | --- | --- | --- | --- |
 | 1 | Infrastructure | v0.1 | ✅ Done |
 | 2 | Turkish commands | v0.2 | ✅ Done |
-| 3 | Look and feel | v0.3 | ⏳ Next |
-| 4 | Usability | v0.4 | |
+| 3 | Look and feel | v0.3 | ✅ Done |
+| 4 | Usability | v0.4 | ⏳ Next |
 | 5 | Custom commands | v0.5 | |
 | 6 | Shell features | v0.6 | |
 | 7 | Aliases and config | v0.7 | |
@@ -33,12 +33,14 @@ The project is built in nine phases. Each phase ends with one commit and a versi
 - [x] All messages in Turkish, collected in `src/messages.h`; Turkish text for common system errors
 - [x] Tests for the new commands
 
-## Phase 3: Look and feel → v0.3
+## Phase 3: Look and feel → v0.3 ✅
 
-- [ ] Alternate screen (previous terminal output is hidden) and a welcome box
-- [ ] Two-line prompt, ✓ / ✗ status indicator, duration of slow commands
-- [ ] Git branch in the prompt
-- [ ] Themes (`tema`) and adapting to the terminal width
+- [x] Alternate screen: previous terminal output is hidden and comes back on exit, also when the shell is killed
+- [x] Welcome box with logo, version, directory and date; plain header on terminals narrower than 66 columns
+- [x] Two-line prompt with time, ✓ / ✗ and exit code, duration of commands that take a second or more
+- [x] Git branch in the prompt, read from `.git/HEAD` without starting a process
+- [x] Themes (`tema`): mavi, yesil, mor, turuncu, sade; saved in `~/.trsh/theme`
+- [x] `temizle` (clear screen)
 
 ## Phase 4: Usability → v0.4
 

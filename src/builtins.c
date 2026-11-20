@@ -11,7 +11,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
 #include <unistd.h>
 
 #include "builtins.h"
@@ -138,25 +137,22 @@ int bi_exit(int argc, char **argv)
 
 int bi_tarih(int argc, char **argv)
 {
-    static const char *const days[] = {
-        "Pazar", "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi",
-    };
-    static const char *const months[] = {
-        "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran",
-        "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık",
-    };
+    char date[64];
 
     if (too_many(argc, argv, 0))
         return 1;
 
-    time_t now = time(NULL);
-    struct tm tm;
-    if (localtime_r(&now, &tm) == NULL) {
-        ui_error(argv[0], "%s", msg_error(errno));
+    ui_format_date(date, sizeof date, 1);
+    puts(date);
+    return 0;
+}
+
+int bi_temizle(int argc, char **argv)
+{
+    if (too_many(argc, argv, 0))
         return 1;
-    }
-    printf("%s, %d %s %d · %02d:%02d\n", days[tm.tm_wday], tm.tm_mday,
-           months[tm.tm_mon], tm.tm_year + 1900, tm.tm_hour, tm.tm_min);
+
+    ui_clear();
     return 0;
 }
 

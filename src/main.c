@@ -5,7 +5,10 @@
  * run it as a tr-shell command if it is one, otherwise as an external
  * program in a child process.
  */
+#define _POSIX_C_SOURCE 200809L
+
 #include <stdio.h>
+#include <time.h>
 
 #include "shell.h"
 #include "ui.h"
@@ -15,11 +18,31 @@
 #include "executor.h"
 
 struct shell g_shell = {
-    .last_status = 0,
-    .interactive = 0,
-    .use_color   = 0,
-    .running     = 1,
+    .last_status      = 0,
+    .last_duration_ms = 0,
+    .has_run          = 0,
+    .interactive      = 0,
+    .use_color        = 0,
+    .running          = 1,
 };
+
+static long elapsed_ms(const struct timespec *a, const struct timespec *b)
+{
+    return (b->tv_sec - a->tv_sec) * 1000L + (b->tv_nsec - a->tv_nsec) / 1000000L;
+}
+
+static void run(int argc, char **argv)
+{
+    struct timespec start, end;
+
+    clock_gettime(CLOCK_MONOTONIC, &start);
+    if (!commands_run(argc, argv))
+        g_shell.last_status = executor_run(argv);
+    clock_gettime(CLOCK_MONOTONIC, &end);
+
+    g_shell.last_duration_ms = elapsed_ms(&start, &end);
+    g_shell.has_run = 1;
+}
 
 int main(void)
 {
@@ -53,13 +76,14 @@ int main(void)
         if (argc == 0)          /* empty line */
             continue;
 
-        if (!commands_run(argc, argv))
-            g_shell.last_status = executor_run(argv);
+        run(argc, argv);
 
         /* Builtin output must not lag behind the next command's output. */
         fflush(stdout);
     }
 
+    /* Back to the normal screen first, so the goodbye stays visible. */
+    ui_shutdown();
     if (g_shell.interactive)
         ui_goodbye();
     return g_shell.last_status;
