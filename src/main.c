@@ -1,8 +1,9 @@
 /*
- * main.c - tr-shell ana döngüsü.
+ * main.c - tr-shell main loop.
  *
- * Her turda: istemi göster, satırı oku, argümanlara ayır,
- * yerleşik komutsa kendin çalıştır, değilse çocuk işlemde çalıştır.
+ * Each iteration: show the prompt, read a line, split it into arguments,
+ * run it as a tr-shell command if it is one, otherwise as an external
+ * program in a child process.
  */
 #include <stdio.h>
 
@@ -10,7 +11,7 @@
 #include "ui.h"
 #include "input.h"
 #include "parser.h"
-#include "builtins.h"
+#include "commands.h"
 #include "executor.h"
 
 struct shell g_shell = {
@@ -34,12 +35,12 @@ int main(void)
             ui_prompt();
 
         int r = input_read_line(line, sizeof line);
-        if (r == 0) {           /* Ctrl+D ya da dosya sonu */
+        if (r == 0) {           /* Ctrl+D or end of file */
             if (g_shell.interactive)
                 putchar('\n');
             break;
         }
-        if (r < 0) {            /* satır çok uzun */
+        if (r < 0) {            /* line too long */
             g_shell.last_status = 1;
             continue;
         }
@@ -49,13 +50,14 @@ int main(void)
             g_shell.last_status = 1;
             continue;
         }
-        if (argc == 0)          /* boş satır */
+        if (argc == 0)          /* empty line */
             continue;
 
-        if (builtin_run(argc, argv))
-            continue;
+        if (!commands_run(argc, argv))
+            g_shell.last_status = executor_run(argv);
 
-        executor_run(argv);
+        /* Builtin output must not lag behind the next command's output. */
+        fflush(stdout);
     }
 
     if (g_shell.interactive)

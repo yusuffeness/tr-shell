@@ -1,3 +1,3 @@
 #!/bin/sh
-# Kendini SIGKILL ile öldürür; sinyalle biten çocuk testinde kullanılır.
+# Kills itself with SIGKILL; used to test children that die from a signal.
 kill -9 $$

@@ -1,13 +1,13 @@
 /*
- * parser.h - komut satırını argümanlara ayırma.
+ * parser.h - splitting a command line into arguments.
  */
 #ifndef TRSH_PARSER_H
 #define TRSH_PARSER_H
 
 /*
- * Satırı boşluk ve sekmelere göre böler, argv'yi NULL ile sonlandırır.
- * line yerinde değiştirilir; argv elemanları line içine işaret eder.
- * Dönüş: argüman sayısı, ya da sınır aşıldıysa -1.
+ * Splits line on spaces and tabs and NULL-terminates argv.
+ * line is modified in place; argv entries point into it.
+ * Returns the argument count, or -1 if max_args would be exceeded.
  */
 int parse_line(char *line, char **argv, int max_args);
 

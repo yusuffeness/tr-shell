@@ -1,0 +1,11 @@
+geri: önceki dizin yok
+/tmp
+/tmp
+/tmp
+/usr
+/tmp
+gec: /olmayan: böyle bir dosya ya da dizin yok
+gec: çok fazla argüman
+geri: çok fazla argüman
+nerdeyim: çok fazla argüman
+[exit 1]

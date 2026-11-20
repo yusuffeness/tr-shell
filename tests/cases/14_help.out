@@ -1,0 +1,44 @@
+tr-shell komutları
+
+Dosya
+  listele    Dizindeki dosyaları listeler
+  oku        Dosyanın içeriğini gösterir
+  kopyala    Dosya ya da klasör kopyalar
+  tasi       Taşır ya da yeniden adlandırır
+  klasor     Klasör oluşturur (ara klasörlerle birlikte)
+  olustur    Boş dosya oluşturur
+  bul        Bu dizinin altında adı desene uyan dosyaları bulur
+  ara        Dosyaların içinde metin arar
+  boyut      Dosya ya da klasörün boyutunu gösterir
+
+Dizin
+  gec        Dizin değiştirir; dizin verilmezse ev dizinine gider
+  geri       Bir önceki dizine döner
+  ev         Ev dizinine gider
+  nerdeyim   Bulunduğun dizini gösterir
+
+Sistem
+  surecler   Çalışan süreçleri CPU kullanımına göre listeler
+  oldur      Süreci sonlandırır
+  disk       Disk kullanımını gösterir
+  bellek     Bellek kullanımını gösterir
+  kimim      Kullanıcı adını gösterir
+  tarih      Tarihi ve saati Türkçe gösterir
+
+Kabuk
+  yardim     Komutları listeler ya da bir komutu açıklar
+  hakkinda   Sürüm ve yazar bilgisi
+  cikis      Kabuktan çıkar
+  cd         Dizin değiştirir (gec'in klasik hâli)
+  exit       Kabuktan çıkar (cikis ile aynı)
+
+Ayrıntı için: yardim KOMUT
+Linux komutları (ls, git, gcc ...) da aynen çalışır.
+klasor - Klasör oluşturur (ara klasörlerle birlikte)
+Kullanım: klasor AD...
+Karşılığı: mkdir -p
+gec - Dizin değiştirir; dizin verilmezse ev dizinine gider
+Kullanım: gec [DİZİN]
+yardim: böyle bir komut yok: olmayan
+yardim: çok fazla argüman
+[exit 1]

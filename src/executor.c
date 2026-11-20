@@ -1,5 +1,5 @@
 /*
- * executor.c - harici komutları çocuk işlemde çalıştırma.
+ * executor.c - running external programs in a child process.
  */
 #define _POSIX_C_SOURCE 200809L
 
@@ -11,21 +11,22 @@
 #include <sys/wait.h>
 
 #include "executor.h"
+#include "messages.h"
 #include "ui.h"
 
-#define EXIT_NOT_FOUND 127   /* bash ile aynı: komut bulunamadı */
-#define EXIT_CANNOT_RUN 126  /* bash ile aynı: bulundu ama çalıştırılamadı */
+#define EXIT_NOT_FOUND  127   /* same as bash: command not found */
+#define EXIT_CANNOT_RUN 126   /* same as bash: found but not executable */
 
-static void child_exec(char **argv)
+static void child_exec(char *const argv[])
 {
     execvp(argv[0], argv);
 
-    /* execvp yalnızca hata olursa döner. */
+    /* execvp only returns on failure. */
     int err = errno;
     if (err == ENOENT)
-        fprintf(stderr, "%s%s:%s komut bulunamadi\n", RED, argv[0], RESET);
+        ui_error(argv[0], "%s", MSG_NOT_FOUND);
     else
-        fprintf(stderr, "%s%s:%s %s\n", RED, argv[0], RESET, strerror(err));
+        ui_error(argv[0], "%s", msg_error(err));
     _exit(err == ENOENT ? EXIT_NOT_FOUND : EXIT_CANNOT_RUN);
 }
 
@@ -51,17 +52,23 @@ static int wait_child(pid_t pid)
     return 1;
 }
 
-void executor_run(char **argv)
+int executor_run(char *const argv[])
 {
+    /*
+     * Flush our own buffered output first; otherwise text printed by a
+     * builtin could appear after the child's output when stdout is a pipe.
+     */
+    fflush(stdout);
+    fflush(stderr);
+
     pid_t pid = fork();
 
     if (pid < 0) {
         perror("fork");
-        g_shell.last_status = 1;
-        return;
+        return 1;
     }
     if (pid == 0)
         child_exec(argv);
 
-    g_shell.last_status = wait_child(pid);
+    return wait_child(pid);
 }

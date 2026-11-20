@@ -1,7 +1,7 @@
 /tmp
 /
-cd: dizin argumani eksik
-cd: /olmayan/dizin: No such file or directory
-cd: cok fazla arguman
+cd: dizin argümanı eksik
+cd: /olmayan/dizin: böyle bir dosya ya da dizin yok
+cd: çok fazla argüman
 /
 [exit 0]

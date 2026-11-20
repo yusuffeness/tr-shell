@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 #
-# tr-shell davranış testleri.
+# tr-shell behaviour tests.
 #
-# Her tests/cases/NAME.in dosyası trsh'ye girdi olarak verilir. Standart
-# çıktı ve hata birleştirilip sonuna "[exit N]" eklenir ve
-# tests/cases/NAME.out ile karşılaştırılır.
+# Each tests/cases/NAME.in is fed to trsh on stdin. Its stdout and stderr
+# are merged, "[exit N]" is appended, and the result is compared with
+# tests/cases/NAME.out.
 #
-#   bash tests/run.sh             tüm testleri çalıştır
-#   bash tests/run.sh cd          adında "cd" geçen testleri çalıştır
-#   UPDATE=1 bash tests/run.sh    beklenen çıktıları yeniden yaz
-#   TRSH=./trsh bash tests/run.sh başka bir ikili dosyayı test et
+#   bash tests/run.sh              run all tests
+#   bash tests/run.sh cd           run tests whose name contains "cd"
+#   UPDATE=1 bash tests/run.sh     rewrite the expected outputs
+#   TRSH=./other bash tests/run.sh test another binary
 
 set -u
 
@@ -19,7 +19,7 @@ TRSH=${TRSH:-"$ROOT/trsh"}
 FILTER=${1:-}
 
 if [ ! -x "$TRSH" ]; then
-    echo "trsh bulunamadi: $TRSH (once 'make' calistirin)" >&2
+    echo "trsh not found: $TRSH (run 'make' first)" >&2
     exit 2
 fi
 
@@ -29,7 +29,14 @@ else
     G='' R='' Y='' N=''
 fi
 
+# A fixed environment keeps the output identical on every machine.
+run_trsh() {
+    env -u OLDPWD HOME=/tmp LC_ALL=C NO_COLOR=1 timeout 10 "$TRSH"
+}
+
 pass=0 fail=0 updated=0
+diff_file=$(mktemp)
+trap 'rm -f "$diff_file"' EXIT
 cd "$ROOT" || exit 2
 
 for in_file in "$CASES"/*.in; do
@@ -37,34 +44,33 @@ for in_file in "$CASES"/*.in; do
     [ -n "$FILTER" ] && [[ "$name" != *"$FILTER"* ]] && continue
 
     out_file="$CASES/$name.out"
-    actual=$(LC_ALL=C timeout 10 "$TRSH" < "$in_file" 2>&1; echo "[exit $?]")
+    actual=$(run_trsh < "$in_file" 2>&1; echo "[exit $?]")
 
     if [ "${UPDATE:-0}" = 1 ]; then
         printf '%s\n' "$actual" > "$out_file"
-        echo "${Y}guncellendi${N} $name"
+        echo "${Y}UPDATED${N} $name"
         updated=$((updated + 1))
         continue
     fi
 
     if [ ! -f "$out_file" ]; then
-        echo "${R}EKSIK${N}  $name (beklenen cikti yok: $name.out)"
+        echo "${R}MISSING${N} $name (no $name.out)"
         fail=$((fail + 1))
-    elif diff -u "$out_file" <(printf '%s\n' "$actual") > /tmp/trsh_diff.$$; then
-        echo "${G}GECTI${N}  $name"
+    elif diff -u "$out_file" <(printf '%s\n' "$actual") > "$diff_file"; then
+        echo "${G}PASS${N}    $name"
         pass=$((pass + 1))
     else
-        echo "${R}KALDI${N}  $name"
-        sed 's/^/        /' /tmp/trsh_diff.$$
+        echo "${R}FAIL${N}    $name"
+        sed 's/^/        /' "$diff_file"
         fail=$((fail + 1))
     fi
 done
-rm -f /tmp/trsh_diff.$$
 
 if [ "${UPDATE:-0}" = 1 ]; then
-    echo "$updated test guncellendi."
+    echo "$updated expected outputs updated."
     exit 0
 fi
 
 echo
-echo "$pass gecti, $fail kaldi."
+echo "$pass passed, $fail failed."
 [ "$fail" -eq 0 ]

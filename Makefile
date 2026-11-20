@@ -1,12 +1,12 @@
 # tr-shell Makefile
 #
-#   make            derle (build/ altına, çıktı: ./trsh)
-#   make run        derle ve çalıştır
-#   make test       davranış testlerini çalıştır
-#   make debug      AddressSanitizer + UBSan ile hata ayıklama sürümü
-#   make install    ~/.local/bin altına kur (PREFIX ile değiştirilebilir)
-#   make uninstall  kurulumu kaldır
-#   make clean      derleme çıktılarını sil
+#   make            build ./trsh (objects go to build/)
+#   make run        build and start the shell
+#   make test       run the behaviour tests
+#   make debug      build with AddressSanitizer and UBSan
+#   make install    install to ~/.local/bin (override with PREFIX=...)
+#   make uninstall  remove the installed binary
+#   make clean      remove build output
 
 TARGET   := trsh
 SRC_DIR  := src

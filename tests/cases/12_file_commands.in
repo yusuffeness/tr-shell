@@ -1,0 +1,13 @@
+rm -rf /tmp/trsh-test
+klasor /tmp/trsh-test/a/b
+olustur /tmp/trsh-test/a/b/bir.txt
+listele /tmp/trsh-test/a/b
+kopyala /tmp/trsh-test/a/b/bir.txt /tmp/trsh-test/a/iki.txt
+tasi /tmp/trsh-test/a/iki.txt /tmp/trsh-test/a/uc.txt
+listele /tmp/trsh-test/a
+oku tests/helpers/sample.txt
+ara merhaba tests/helpers/sample.txt
+gec /tmp/trsh-test
+bul bir.txt
+oku olmayan.txt
+rm -r /tmp/trsh-test

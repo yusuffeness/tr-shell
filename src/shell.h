@@ -1,21 +1,22 @@
 /*
- * shell.h - tr-shell genel tanımları ve paylaşılan durum.
+ * shell.h - global constants and shared shell state.
  */
 #ifndef TRSH_SHELL_H
 #define TRSH_SHELL_H
 
 #define TRSH_NAME    "tr-shell"
-#define TRSH_VERSION "0.1.0"
+#define TRSH_VERSION "0.2.0"
 #define TRSH_USER    "Yusuf Enes Kütük"
+#define TRSH_URL     "https://github.com/yusuffeness/tr-shell"
 
-#define MAX_LINE 1024   /* bir satırın en fazla bayt sayısı (\n ve \0 dahil) */
-#define MAX_ARGS 64     /* argv dizisinin boyutu (NULL sonlandırıcı dahil) */
+#define MAX_LINE 1024   /* max bytes in one input line (including \n and \0) */
+#define MAX_ARGS 64     /* size of argv arrays (including the NULL terminator) */
 
 struct shell {
-    int last_status;    /* son komutun çıkış kodu (0 = başarılı) */
-    int interactive;    /* girdi bir terminalden geliyorsa 1 */
-    int use_color;      /* çıktı terminale gidiyorsa 1 */
-    int running;        /* 0 olunca ana döngü biter */
+    int last_status;    /* exit status of the last command (0 = success) */
+    int interactive;    /* 1 if input comes from a terminal */
+    int use_color;      /* 1 if output goes to a terminal and NO_COLOR is unset */
+    int running;        /* main loop stops when this becomes 0 */
 };
 
 extern struct shell g_shell;

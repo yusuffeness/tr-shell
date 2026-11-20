@@ -1,13 +1,19 @@
 /*
- * builtins.h - shell'in kendi işleminde çalışan yerleşik komutlar.
+ * builtins.h - commands that run inside the shell process.
+ *
+ * Each builtin takes the usual (argc, argv) and returns an exit status.
+ * They are registered in the command table in commands.c.
  */
 #ifndef TRSH_BUILTINS_H
 #define TRSH_BUILTINS_H
 
-/*
- * argv[0] yerleşik bir komutsa çalıştırır ve 1 döner.
- * Yerleşik değilse hiçbir şey yapmaz ve 0 döner.
- */
-int builtin_run(int argc, char **argv);
+int bi_cd(int argc, char **argv);        /* cd DIR                 */
+int bi_gec(int argc, char **argv);       /* gec [DIR], home if none */
+int bi_geri(int argc, char **argv);      /* back to $OLDPWD         */
+int bi_ev(int argc, char **argv);        /* go to $HOME             */
+int bi_nerdeyim(int argc, char **argv);  /* print working directory */
+int bi_exit(int argc, char **argv);      /* exit / cikis            */
+int bi_tarih(int argc, char **argv);     /* date in Turkish         */
+int bi_hakkinda(int argc, char **argv);  /* version and author      */
 
 #endif

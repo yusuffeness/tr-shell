@@ -1,0 +1,11 @@
+bir.txt
+b
+uc.txt
+merhaba dünya
+ikinci satır
+merhaba yine
+1:merhaba dünya
+3:merhaba yine
+./a/b/bir.txt
+cat: olmayan.txt: No such file or directory
+[exit 0]
