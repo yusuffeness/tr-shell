@@ -8,7 +8,7 @@ Dosya
   tasi       Taşır ya da yeniden adlandırır
   klasor     Klasör oluşturur (ara klasörlerle birlikte)
   olustur    Boş dosya oluşturur
-  bul        Bu dizinin altında adı desene uyan dosyaları bulur
+  bul        Adı desene uyan dosyaları bulur (ör. bul "*.c")
   ara        Dosyaların içinde metin arar
   boyut      Dosya ya da klasörün boyutunu gösterir
   sil        Onay sorar ve çöp kutusuna taşır; -e sormaz
@@ -37,6 +37,10 @@ Araçlar
 
 Kabuk
   yardim     Komutları listeler ya da bir komutu açıklar
+  isler      Arka plandaki ve durdurulmuş işleri listeler
+  on         İşi ön plana alır (Ctrl+Z ile durdurulanı da)
+  arka       Durdurulmuş işi arka planda sürdürür
+  degisken   Ortam değişkenlerini listeler, atar ya da siler
   gecmis     Önceki komutları listeler; !N ile tekrar çalıştırılır
   tema       Temaları listeler ya da temayı değiştirir
   temizle    Ekranı temizler

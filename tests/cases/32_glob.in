@@ -1,0 +1,8 @@
+gec /tmp/trsh-home
+olustur a.c b.c c.h .gizli.c
+echo *.c
+echo *.h *.txt
+echo "*.c" '*.c' \*.c
+echo ?.c
+echo [ab].c
+oku *.yok

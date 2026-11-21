@@ -1,0 +1,10 @@
+tr-shell: sözdizimi hatası: beklenmeyen '|'
+tr-shell: sözdizimi hatası: beklenmeyen '||'
+tr-shell: sözdizimi hatası: beklenmeyen ';'
+tr-shell: sözdizimi hatası: beklenmeyen '&'
+tr-shell: sözdizimi hatası: beklenmeyen '|'
+tr-shell: sözdizimi hatası: satır beklenmedik şekilde bitti
+tr-shell: sözdizimi hatası: satır beklenmedik şekilde bitti
+tr-shell: sözdizimi hatası: satır beklenmedik şekilde bitti
+tamam
+[exit 0]

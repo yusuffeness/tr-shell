@@ -5,12 +5,12 @@
 #define TRSH_SHELL_H
 
 #define TRSH_NAME    "tr-shell"
-#define TRSH_VERSION "0.5.0"
+#define TRSH_VERSION "0.6.0"
 #define TRSH_USER    "Yusuf Enes Kütük"
 #define TRSH_URL     "https://github.com/yusuffeness/tr-shell"
 
-#define MAX_LINE 1024   /* max bytes in one input line (including \n and \0) */
-#define MAX_ARGS 64     /* size of argv arrays (including the NULL terminator) */
+#define MAX_LINE 4096   /* max bytes in one input line (including \n and \0) */
+#define MAX_ARGS 1024   /* max words in one command (including a NULL terminator) */
 
 struct shell {
     int last_status;        /* exit status of the last command (0 = success) */

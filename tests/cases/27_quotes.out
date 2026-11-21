@@ -1,0 +1,13 @@
+iki   boşluk tek $HOME çift /tmp/trsh-home
+tırnak " içinde tek "çift" içinde tek 'tek' içinde
+a b $HOME \ "
+  x
+yarıyarıbirleşik
+
+a#b
+[a b]
+[c]
+tr-shell: kapanmamış tırnak: "
+tr-shell: kapanmamış tırnak: '
+son
+[exit 0]

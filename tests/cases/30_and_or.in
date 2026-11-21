@@ -1,0 +1,15 @@
+true && echo ve-1
+false && echo bu-yazilmamali
+false || echo veya-1
+true || echo bu-da-yazilmamali
+false && echo x || echo zincir
+echo bir; echo iki; echo üç
+false; echo $?
+true; echo $?
+olmayan_xyz || echo bulunamadı-ama-devam
+gec /tmp && nerdeyim
+gec /yok && echo yazilmamali
+echo a ;
+echo a ; ; echo b
+&& echo x
+echo a &&

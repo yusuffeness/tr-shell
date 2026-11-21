@@ -1,0 +1,7 @@
+a.c b.c
+c.h *.txt
+*.c *.c *.c
+a.c b.c
+a.c b.c
+cat: '*.yok': No such file or directory
+[exit 1]

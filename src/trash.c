@@ -35,28 +35,28 @@
 #define TRASH_DIR "cop"
 #define TRASH_LOG "cop.log"
 
-struct item {
+struct trash_item {
     long id;
     char stored[NAME_MAX + 32];
     char orig[PATH_MAX];
     long when;
 };
 
-struct items {
-    struct item *v;
+struct trash_items {
+    struct trash_item *v;
     size_t len;
 };
 
 /* ------------------------------------------------------------- the log */
 
-static void items_free(struct items *it)
+static void items_free(struct trash_items *it)
 {
     free(it->v);
     it->v = NULL;
     it->len = 0;
 }
 
-static int load(struct items *it)
+static int load(struct trash_items *it)
 {
     char path[PATH_MAX];
     char line[PATH_MAX + NAME_MAX + 128];
@@ -72,7 +72,7 @@ static int load(struct items *it)
         return errno == ENOENT ? 0 : -1;
 
     while (fgets(line, sizeof line, f) != NULL) {
-        struct item x;
+        struct trash_item x;
         char *id = strtok(line, "\t\n");
         char *stored = strtok(NULL, "\t\n");
         char *orig = strtok(NULL, "\t\n");
@@ -87,7 +87,7 @@ static int load(struct items *it)
 
         if (it->len == cap) {
             cap = cap ? cap * 2 : 16;
-            struct item *grown = realloc(it->v, cap * sizeof *grown);
+            struct trash_item *grown = realloc(it->v, cap * sizeof *grown);
             if (grown == NULL)
                 break;
             it->v = grown;
@@ -98,7 +98,7 @@ static int load(struct items *it)
     return 0;
 }
 
-static int save(const struct items *it)
+static int save(const struct trash_items *it)
 {
     char path[PATH_MAX];
 
@@ -113,7 +113,7 @@ static int save(const struct items *it)
     return fclose(f);
 }
 
-static int append(const struct item *x)
+static int append(const struct trash_item *x)
 {
     char path[PATH_MAX];
 
@@ -140,7 +140,7 @@ static int trash_dir(char *buf, size_t size, const char *who)
 }
 
 /* The name shown to the user: the stored name without "<id>_". */
-static const char *display_name(const struct item *x)
+static const char *display_name(const struct trash_item *x)
 {
     const char *u = strchr(x->stored, '_');
     return u ? u + 1 : x->stored;
@@ -192,7 +192,7 @@ static int move(const char *from, const char *to, const char *who)
 
 static long next_id(void)
 {
-    struct items it;
+    struct trash_items it;
     long max = 0;
 
     if (load(&it) == 0)
@@ -206,7 +206,7 @@ static long next_id(void)
 static int trash_one(const char *arg, int ask, const char *dir)
 {
     char path[PATH_MAX], question[PATH_MAX + 64], dest[PATH_MAX + NAME_MAX + 64];
-    struct item x;
+    struct trash_item x;
     struct stat st;
 
     snprintf(path, sizeof path, "%s", arg);
@@ -279,7 +279,7 @@ int bi_sil(int argc, char **argv)
 
 static int trash_list(void)
 {
-    struct items it;
+    struct trash_items it;
     char date[32];
 
     if (load(&it) != 0) {
@@ -292,7 +292,7 @@ static int trash_list(void)
         return 0;
     }
     for (size_t i = 0; i < it.len; i++) {
-        const struct item *x = &it.v[i];
+        const struct trash_item *x = &it.v[i];
         fmt_short_date(date, sizeof date, (time_t)x->when);
         printf("  %s%3ld%s  %s%s%s  %-20s %s← %s%s\n", GRAY, x->id, RESET,
                GRAY, date, RESET, display_name(x), GRAY, x->orig, RESET);
@@ -313,7 +313,7 @@ static int is_number(const char *s)
 }
 
 /* Finds an item by id, or the most recent one with that name. */
-static long find_item(const struct items *it, const char *key)
+static long find_item(const struct trash_items *it, const char *key)
 {
     if (is_number(key)) {
         long id = atol(key);
@@ -330,7 +330,7 @@ static long find_item(const struct items *it, const char *key)
 
 static int trash_restore(const char *key)
 {
-    struct items it;
+    struct trash_items it;
     char dir[PATH_MAX], from[PATH_MAX + NAME_MAX + 64];
     struct stat st;
 
@@ -343,7 +343,7 @@ static int trash_restore(const char *key)
         items_free(&it);
         return 1;
     }
-    struct item *x = &it.v[i];
+    struct trash_item *x = &it.v[i];
     if (lstat(x->orig, &st) == 0) {
         ui_error("copkutusu", "%s: %s", x->orig, msg_error(EEXIST));
         items_free(&it);
@@ -366,7 +366,7 @@ static int trash_restore(const char *key)
 
 static int trash_empty(int ask)
 {
-    struct items it;
+    struct trash_items it;
     char dir[PATH_MAX], question[128], path[PATH_MAX + NAME_MAX + 64];
     int failed = 0;
 

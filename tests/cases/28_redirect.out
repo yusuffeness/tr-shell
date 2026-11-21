@@ -1,0 +1,20 @@
+bir
+iki
+bir
+iki
+2
+yeni
+cat: yok.txt: No such file or directory
+cat: yok.txt: No such file or directory
+yeni
+2 hata.txt
+gec - Dizin değiştirir; dizin verilmezse ev dizinine gider
+Kullanım: gec [DİZİN]
+/tmp/trsh-home
+-rw-r--r--       0 B  TARIH  bos.txt
+0 klasör, 1 dosya, toplam 0 B
+/olmayan/klasor/dosya: böyle bir dosya ya da dizin yok
+yok.txt: böyle bir dosya ya da dizin yok
+tr-shell: sözdizimi hatası: satır beklenmedik şekilde bitti
+a
+[exit 0]

@@ -16,5 +16,6 @@ int bi_exit(int argc, char **argv);      /* exit / cikis            */
 int bi_tarih(int argc, char **argv);     /* date in Turkish         */
 int bi_temizle(int argc, char **argv);   /* clear screen, banner    */
 int bi_hakkinda(int argc, char **argv);  /* version and author      */
+int bi_degisken(int argc, char **argv);  /* list / set / unset env  */
 
 #endif

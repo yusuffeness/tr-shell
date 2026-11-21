@@ -1,0 +1,25 @@
+gec /tmp/trsh-home
+echo bir > dosya.txt
+echo iki >> dosya.txt
+oku dosya.txt
+oku < dosya.txt
+wc -l < dosya.txt
+echo yeni > dosya.txt
+oku dosya.txt
+oku yok.txt 2> hata.txt
+oku hata.txt
+oku yok.txt dosya.txt > hepsi.txt 2>&1
+oku hepsi.txt
+oku yok.txt 2>> hata.txt
+wc -l hata.txt
+yardim gec > yardim.txt
+oku yardim.txt
+nerdeyim > konum.txt
+oku konum.txt
+> bos.txt
+listele -d bos.txt
+echo x > /olmayan/klasor/dosya
+oku < yok.txt
+echo >
+echo a > b > c
+oku b c

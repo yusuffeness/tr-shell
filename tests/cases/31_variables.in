@@ -1,0 +1,19 @@
+degisken AD=Enes SOYAD=Kütük
+echo $AD ${SOYAD} "$AD $SOYAD" '$AD'
+echo ${AD}abc $ADabc
+echo $OLMAYAN_DEGISKEN| cat
+SEHIR=Ankara
+echo $SEHIR
+X=1 sh -c 'echo cocukta=$X'
+echo disarida=$X
+false
+echo durum=$?
+echo pid-sayi-mi=$$ | tr -d 0-9
+gec /tmp/trsh-home
+echo ~ ~/alt a~b
+degisken sil AD
+echo [$AD]
+degisken 1yanlis=x
+degisken AD
+degisken sil
+echo $ ${ ${}

@@ -1,0 +1,11 @@
+echo "iki   boşluk" 'tek $HOME' "çift $HOME"
+echo "tırnak \" içinde" 'tek "çift" içinde' "tek 'tek' içinde"
+echo a\ b \$HOME \\ \"
+echo "" '' x
+echo "yarı"'yarı'birleşik
+echo # yorum
+echo a#b
+printf '[%s]\n' "a b" c
+echo "kapanmamış
+echo 'kapanmamış
+echo son

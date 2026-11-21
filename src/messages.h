@@ -75,6 +75,20 @@
 #define MSG_NOTES_EMPTY     "Henüz not yok. Eklemek için: not METİN"
 #define MSG_NOTES_READ_FAIL "notlar okunamadı"
 
+#define MSG_SYNTAX          "sözdizimi hatası: beklenmeyen '%s'"
+#define MSG_SYNTAX_END      "sözdizimi hatası: satır beklenmedik şekilde bitti"
+#define MSG_UNCLOSED_QUOTE  "kapanmamış tırnak: %c"
+#define MSG_NO_MEMORY       "bellek yetersiz"
+#define MSG_BAD_ASSIGNMENT  "geçersiz atama: %s (AD=DEĞER biçiminde olmalı)"
+
+#define MSG_JOB_RUNNING     "Çalışıyor"
+#define MSG_JOB_STOPPED     "Durduruldu"
+#define MSG_JOB_DONE        "Bitti"
+#define MSG_JOB_FAILED      "Çıkış"
+#define MSG_NO_JOBS         "iş yok"
+#define MSG_NO_SUCH_JOB     "böyle bir iş yok: %s"
+#define MSG_JOB_NOT_STOPPED "%d numaralı iş zaten çalışıyor"
+
 #define MSG_TIME_REAL       "gerçek"
 #define MSG_TIME_USER       "kullanıcı"
 #define MSG_TIME_SYS        "sistem"

@@ -4,15 +4,16 @@ A small Unix shell written in C, with Turkish commands and a colorful prompt.
 
 tr-shell started as an Operating Systems course assignment and is being grown into a
 complete, everyday-usable shell. It is a hands-on project around the classic process
-APIs: `fork`, `execvp`, `waitpid`, `pipe`, `dup2` and signals.
+APIs: `fork`, `execvp`, `waitpid`, `pipe`, `dup2`, signals, process groups and
+`tcsetpgrp`.
 
-> **Status:** v0.5 — custom commands. See [ROADMAP.md](ROADMAP.md) for what comes next.
+> **Status:** v0.6 — shell features. See [ROADMAP.md](ROADMAP.md) for what comes next.
 
 ```text
 ╭────────────────────────────────────────────────────────────────╮
 │                                                                │
 │   ████████╗██████╗ ███████╗██╗  ██╗                            │
-│   ╚══██╔══╝██╔══██╗██╔════╝██║  ██║   tr-shell 0.5.0           │
+│   ╚══██╔══╝██╔══██╗██╔════╝██║  ██║   tr-shell 0.6.0           │
 │      ██║   ██████╔╝███████╗███████║   Yusuf Enes Kütük         │
 │      ██║   ██╔══██╗╚════██║██╔══██║                            │
 │      ██║   ██║  ██║███████║██║  ██║   ~/projects/tr-shell      │
@@ -37,6 +38,8 @@ listel: komut bulunamadı. Bunu mu demek istediniz: listele?
 
 ## Features
 
+- **A real shell language:** quotes, pipes, redirection, `&&` / `||` / `;`, variables,
+  file name patterns and job control — see [Shell syntax](#shell-syntax)
 - **Its own screen.** Opens on the terminal's alternate screen like `vim` or `less`;
   your previous terminal output comes back when you leave
 - **Welcome box** with logo, version, directory and date (a plain header on narrow
@@ -70,7 +73,7 @@ listel: komut bulunamadı. Bunu mu demek istediniz: listele?
 | | `tasi SRC DST` | Move or rename | `mv` |
 | | `klasor NAME...` | Create folders, with parents | `mkdir -p` |
 | | `olustur FILE...` | Create empty files | `touch` |
-| | `bul PATTERN` | Find files by name below the current directory | `find . -name` |
+| | `bul "PATTERN"` | Find files by name below the current directory | `find . -name` |
 | | `ara WORD [PATH]` | Search text inside files | `grep -rn` |
 | | `boyut [PATH]` | Show size | `du -sh` |
 | | `sil [-e] PATH...` | Ask, then move to the trash (`-e`: don't ask) | builtin |
@@ -92,6 +95,10 @@ listel: komut bulunamadı. Bunu mu demek istediniz: listele?
 | | `notlar [sil N]` | List notes or delete one | builtin |
 | Shell | `yardim [CMD]` | Help | builtin |
 | | `gecmis [N]` | Command history; rerun with `!N`, `!!` or `!PREFIX` | builtin |
+| | `isler` | List background and stopped jobs | builtin |
+| | `on [N]` | Bring a job to the foreground (`fg`) | builtin |
+| | `arka [N]` | Continue a stopped job in the background (`bg`) | builtin |
+| | `degisken [NAME=VALUE... \| sil NAME]` | List, set or remove environment variables | builtin |
 | | `tema [NAME]` | List themes or switch: `mavi`, `yesil`, `mor`, `turuncu`, `sade` | builtin |
 | | `temizle` | Clear the screen | builtin |
 | | `hakkinda` | Version and author | builtin |
@@ -100,6 +107,27 @@ listel: komut bulunamadı. Bunu mu demek istediniz: listele?
 
 For commands that run a standard tool, extra arguments are passed through:
 `kopyala -v a b` runs `cp -r -v a b`.
+
+## Shell syntax
+
+```bash
+echo "iki   boşluk" 'tek $HOME' a\ b      # quotes and escapes
+oku notlar.txt | grep sınav | wc -l     # pipelines
+listele > liste.txt 2> hatalar.txt     # redirection: < > >> 2> 2>> 2>&1
+make && ./trsh || echo derlenemedi     # run the next one on success / failure
+klasor yeni; gec yeni                  # one after the other
+AD=Enes; echo "Merhaba $AD" ~         # variables: $AD ${AD} $? $$ ~
+DEBUG=1 ./program                      # variable for one command only
+oku *.c                                # * ? [...] match file names
+sleep 100 &                            # background job
+```
+
+**Job control:** Ctrl+Z stops the running job, `isler` lists jobs, `on` brings one back to
+the foreground and `arka` lets it continue in the background. Ctrl+C stops only the
+foreground job, never the shell.
+
+Not supported (yet): `$(...)`, here-documents, `if` / loops (see the roadmap) and word
+splitting of unquoted variables.
 
 ## Requirements
 
@@ -136,8 +164,12 @@ src/
   shell.h       shared constants and shell state
   commands.c    command table, dispatch and help
   builtins.c    commands that run inside the shell (gec, geri, tarih ...)
-  executor.c    fork / exec / wait
-  parser.c      splitting a line into arguments
+  lexer.c       tokens: words, quotes, operators
+  parser.c      syntax tree: lists, and/or, pipelines, redirections
+  expand.c      variables, ~, quote removal, file name patterns
+  executor.c    pipes, redirections, builtins in the shell process
+  jobs.c        job control: process groups, terminal, isler/on/arka
+  strvec.c      growable string arrays
   input.c       reading a line (readline or plain)
   history.c     history, `gecmis` and !-expansion
   completion.c  Tab completion

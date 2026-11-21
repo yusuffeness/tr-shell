@@ -16,7 +16,7 @@ enum cmd_kind {
     CMD_ALIAS,
 };
 
-struct command {
+struct command_entry {
     const char *name;
     enum cmd_kind kind;
     int (*fn)(int argc, char **argv);   /* CMD_BUILTIN */
@@ -27,16 +27,23 @@ struct command {
 };
 
 /* Returns the entry for name, or NULL if it is not a tr-shell command. */
-const struct command *commands_find(const char *name);
+const struct command_entry *commands_find(const char *name);
 
 /* Number of entries, and entry i (for completion and suggestions). */
 size_t commands_count(void);
-const struct command *commands_at(size_t i);
+const struct command_entry *commands_at(size_t i);
 
 /*
  * Runs a command line: a builtin, an alias, or otherwise an external
  * program. Returns its exit status.
  */
 int commands_exec(int argc, char **argv);
+
+/*
+ * In a forked child: runs a builtin and exits with its status, or replaces
+ * the process with the program (an alias's target, or argv[0] itself).
+ * Prints "komut bulunamadı" (with a suggestion) if it cannot be run.
+ */
+_Noreturn void commands_exec_child(int argc, char **argv);
 
 #endif

@@ -1,0 +1,15 @@
+Enes Kütük Enes Kütük $AD
+Enesabc 
+
+Ankara
+cocukta=1
+disarida=
+durum=1
+pid-sayi-mi=
+/tmp/trsh-home /tmp/trsh-home/alt a~b
+[]
+degisken: geçersiz atama: 1yanlis=x (AD=DEĞER biçiminde olmalı)
+degisken: geçersiz atama: AD (AD=DEĞER biçiminde olmalı)
+degisken: Kullanım: degisken sil AD...
+$ ${ ${}
+[exit 0]

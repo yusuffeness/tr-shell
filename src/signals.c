@@ -33,13 +33,22 @@ void signals_init(void)
     sigemptyset(&sa.sa_mask);
     sigaction(SIGINT, &sa, NULL);
 
+    /*
+     * The shell itself must never be stopped: Ctrl+Z is for the foreground
+     * job, and SIGTTOU/SIGTTIN would stop us when we hand the terminal
+     * back and forth with tcsetpgrp().
+     */
     signal(SIGQUIT, SIG_IGN);
     signal(SIGTSTP, SIG_IGN);
+    signal(SIGTTOU, SIG_IGN);
+    signal(SIGTTIN, SIG_IGN);
 }
 
 void signals_child(void)
 {
     signal(SIGINT, SIG_DFL);
     signal(SIGQUIT, SIG_DFL);
-    /* SIGTSTP stays ignored: nothing could resume a stopped child yet. */
+    signal(SIGTSTP, SIG_DFL);
+    signal(SIGTTOU, SIG_DFL);
+    signal(SIGTTIN, SIG_DFL);
 }

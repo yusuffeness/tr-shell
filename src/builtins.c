@@ -14,6 +14,7 @@
 #include <unistd.h>
 
 #include "builtins.h"
+#include "expand.h"
 #include "messages.h"
 #include "ui.h"
 
@@ -171,4 +172,65 @@ int bi_hakkinda(int argc, char **argv)
 #endif
     printf("%s\n", TRSH_URL);
     return 0;
+}
+
+extern char **environ;
+
+static int compare_strings(const void *a, const void *b)
+{
+    return strcmp(*(char *const *)a, *(char *const *)b);
+}
+
+/* Lists the environment sorted by name, NAME in color. */
+static int list_environment(void)
+{
+    size_t n = 0;
+
+    while (environ[n] != NULL)
+        n++;
+    char **sorted = malloc((n ? n : 1) * sizeof *sorted);
+    if (sorted == NULL)
+        return 1;
+    memcpy(sorted, environ, n * sizeof *sorted);
+    if (n > 1)
+        qsort(sorted, n, sizeof *sorted, compare_strings);
+
+    for (size_t i = 0; i < n; i++) {
+        const char *eq = strchr(sorted[i], '=');
+        int len = eq ? (int)(eq - sorted[i]) : (int)strlen(sorted[i]);
+        printf("%s%.*s%s=%s\n", GREEN, len, sorted[i], RESET, eq ? eq + 1 : "");
+    }
+    free(sorted);
+    return 0;
+}
+
+int bi_degisken(int argc, char **argv)
+{
+    int status = 0;
+
+    if (argc == 1)
+        return list_environment();
+
+    if (strcmp(argv[1], "sil") == 0) {
+        if (argc < 3) {
+            ui_error(argv[0], "%s %s", MSG_HELP_USAGE, "degisken sil AD...");
+            return 1;
+        }
+        for (int i = 2; i < argc; i++)
+            unsetenv(argv[i]);
+        return 0;
+    }
+
+    for (int i = 1; i < argc; i++) {
+        char *eq = strchr(argv[i], '=');
+        if (!is_assignment(argv[i]) || eq == NULL) {
+            ui_error(argv[0], MSG_BAD_ASSIGNMENT, argv[i]);
+            status = 1;
+            continue;
+        }
+        *eq = '\0';
+        setenv(argv[i], eq + 1, 1);
+        *eq = '=';
+    }
+    return status;
 }

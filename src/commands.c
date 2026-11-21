@@ -4,8 +4,11 @@
  */
 #define _POSIX_C_SOURCE 200809L
 
+#include <errno.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include <sys/resource.h>
 #include <sys/time.h>
 #include <time.h>
@@ -16,6 +19,8 @@
 #include "calc.h"
 #include "files.h"
 #include "history.h"
+#include "jobs.h"
+#include "suggest.h"
 #include "notes.h"
 #include "sysinfo.h"
 #include "trash.h"
@@ -23,6 +28,9 @@
 #include "shell.h"
 #include "theme.h"
 #include "ui.h"
+
+#define EXIT_NOT_FOUND  127   /* same as bash: command not found */
+#define EXIT_CANNOT_RUN 126   /* same as bash: found but not executable */
 
 static int bi_yardim(int argc, char **argv);
 static int bi_zamanla(int argc, char **argv);
@@ -50,7 +58,7 @@ static int bi_zamanla(int argc, char **argv);
 
 static const char *const groups[] = { G_FILES, G_DIRS, G_SYSTEM, G_TOOLS, G_SHELL };
 
-static const struct command table[] = {
+static const struct command_entry table[] = {
     BUILTIN("listele", bi_listele, G_FILES,
             "listele [-a] [-d] [YOL...]", "Dosyaları listeler; -a gizliler, -d ayrıntılı"),
     BUILTIN("agac", bi_agac, G_FILES,
@@ -66,7 +74,7 @@ static const struct command table[] = {
     ALIAS("olustur", RUN("touch"), G_FILES,
           "olustur DOSYA...", "Boş dosya oluşturur"),
     ALIAS("bul", RUN("find", ".", "-name"), G_FILES,
-          "bul DESEN", "Bu dizinin altında adı desene uyan dosyaları bulur"),
+          "bul \"DESEN\"", "Adı desene uyan dosyaları bulur (ör. bul \"*.c\")"),
     ALIAS("ara", RUN("grep", "-rn", "--color=auto"), G_FILES,
           "ara KELİME [YER]", "Dosyaların içinde metin arar"),
     ALIAS("boyut", RUN("du", "-sh"), G_FILES,
@@ -111,6 +119,14 @@ static const struct command table[] = {
 
     BUILTIN("yardim", bi_yardim, G_SHELL,
             "yardim [KOMUT]", "Komutları listeler ya da bir komutu açıklar"),
+    BUILTIN("isler", bi_isler, G_SHELL,
+            "isler", "Arka plandaki ve durdurulmuş işleri listeler"),
+    BUILTIN("on", bi_on, G_SHELL,
+            "on [NO]", "İşi ön plana alır (Ctrl+Z ile durdurulanı da)"),
+    BUILTIN("arka", bi_arka, G_SHELL,
+            "arka [NO]", "Durdurulmuş işi arka planda sürdürür"),
+    BUILTIN("degisken", bi_degisken, G_SHELL,
+            "degisken [AD=DEĞER... | sil AD]", "Ortam değişkenlerini listeler, atar ya da siler"),
     BUILTIN("gecmis", bi_gecmis, G_SHELL,
             "gecmis [N]", "Önceki komutları listeler; !N ile tekrar çalıştırılır"),
     BUILTIN("tema", bi_tema, G_SHELL,
@@ -130,7 +146,7 @@ static const struct command table[] = {
 #define TABLE_LEN (sizeof table / sizeof table[0])
 #define GROUPS_LEN (sizeof groups / sizeof groups[0])
 
-const struct command *commands_find(const char *name)
+const struct command_entry *commands_find(const char *name)
 {
     for (size_t i = 0; i < TABLE_LEN; i++)
         if (strcmp(table[i].name, name) == 0)
@@ -138,35 +154,52 @@ const struct command *commands_find(const char *name)
     return NULL;
 }
 
-/* Builds "target... user-args..." and runs it as an external program. */
-static int run_alias(const struct command *cmd, int argc, char **argv)
-{
-    char *expanded[MAX_ARGS];
-    int n = 0;
-
-    for (const char *const *t = cmd->target; *t != NULL; t++)
-        expanded[n++] = (char *)*t;
-
-    if (n + argc - 1 > MAX_ARGS - 1) {
-        ui_error(TRSH_NAME, MSG_TOO_MANY_ARGS, MAX_ARGS - 1);
-        return 1;
-    }
-    for (int i = 1; i < argc; i++)
-        expanded[n++] = argv[i];
-    expanded[n] = NULL;
-
-    return executor_run(expanded);
-}
-
 int commands_exec(int argc, char **argv)
 {
-    const struct command *cmd = commands_find(argv[0]);
+    return exec_argv(argc, argv);
+}
 
-    if (cmd == NULL)
-        return executor_run(argv);
-    if (cmd->kind == CMD_BUILTIN)
-        return cmd->fn(argc, argv);
-    return run_alias(cmd, argc, argv);
+void commands_exec_child(int argc, char **argv)
+{
+    const struct command_entry *cmd = commands_find(argv[0]);
+    char **run = argv;
+
+    if (cmd != NULL && cmd->kind == CMD_BUILTIN) {
+        int status = cmd->fn(argc, argv);
+        fflush(stdout);
+        fflush(stderr);
+        _exit(status);
+    }
+
+    /* An alias runs its target followed by the user's arguments. */
+    if (cmd != NULL && cmd->kind == CMD_ALIAS) {
+        size_t nt = 0;
+        while (cmd->target[nt] != NULL)
+            nt++;
+        run = malloc((nt + (size_t)argc) * sizeof *run);
+        if (run == NULL)
+            _exit(1);
+        for (size_t i = 0; i < nt; i++)
+            run[i] = (char *)cmd->target[i];
+        for (int i = 1; i < argc; i++)
+            run[nt + (size_t)i - 1] = argv[i];
+        run[nt + (size_t)argc - 1] = NULL;
+    }
+
+    execvp(run[0], run);
+
+    /* execvp only returns on failure. */
+    int err = errno;
+    if (err == ENOENT) {
+        const char *guess = cmd == NULL ? suggest_command(argv[0]) : NULL;
+        if (guess != NULL)
+            ui_error(run[0], "%s. " MSG_DID_YOU_MEAN, MSG_NOT_FOUND, guess);
+        else
+            ui_error(run[0], "%s", MSG_NOT_FOUND);
+    } else {
+        ui_error(run[0], "%s", msg_error(err));
+    }
+    _exit(err == ENOENT ? EXIT_NOT_FOUND : EXIT_CANNOT_RUN);
 }
 
 size_t commands_count(void)
@@ -174,7 +207,7 @@ size_t commands_count(void)
     return TABLE_LEN;
 }
 
-const struct command *commands_at(size_t i)
+const struct command_entry *commands_at(size_t i)
 {
     return i < TABLE_LEN ? &table[i] : NULL;
 }
@@ -236,7 +269,7 @@ static void print_target(const char *const *target)
 
 static int help_one(const char *name)
 {
-    const struct command *cmd = commands_find(name);
+    const struct command_entry *cmd = commands_find(name);
 
     if (cmd == NULL) {
         ui_error("yardim", MSG_UNKNOWN_HELP, name);

@@ -9,8 +9,8 @@ The project is built in nine phases. Each phase ends with one commit and a versi
 | 3 | Look and feel | v0.3 | ✅ Done |
 | 4 | Usability | v0.4 | ✅ Done |
 | 5 | Custom commands | v0.5 | ✅ Done |
-| 6 | Shell features | v0.6 | ⏳ Next |
-| 7 | Aliases and config | v0.7 | |
+| 6 | Shell features | v0.6 | ✅ Done |
+| 7 | Aliases and config | v0.7 | ⏳ Next |
 | 8 | Scripting (optional) | v0.8 | |
 | 9 | Release | v1.0 | |
 
@@ -61,15 +61,16 @@ The project is built in nine phases. Each phase ends with one commit and a versi
 - [x] `hesapla`: recursive-descent calculator with `+ - * / % ^`, parentheses and decimal commas
 - [x] `not` / `notlar`: quick notes in `~/.trsh/notlar`
 
-## Phase 6: Shell features → v0.6
+## Phase 6: Shell features → v0.6 ✅
 
-- [ ] New lexer: quotes and escape characters
-- [ ] Parser that builds a syntax tree
-- [ ] Redirection: `>`, `>>`, `<`, `2>`
-- [ ] Pipes: `|`
-- [ ] `&&`, `||`, `;`
-- [ ] Variables: `$HOME`, `$?`, `~`, `degisken`
-- [ ] Background jobs: `&`, `isler`, `on`, `arka`
+- [x] Lexer: single and double quotes, backslash escapes, `#` comments
+- [x] Recursive-descent parser building a syntax tree (lists, and/or, pipelines, commands, redirections) with clear syntax errors
+- [x] Redirection: `<`, `>`, `>>`, `2>`, `2>>`, `2>&1`; also for builtins, which run in the shell with their descriptors saved and restored
+- [x] Pipelines of any length with `pipe` and `dup2`
+- [x] `&&`, `||`, `;`
+- [x] Variables: `$NAME`, `${NAME}`, `$?`, `$$`, `~`; `NAME=value` and `NAME=value command`; `degisken`
+- [x] File name patterns: `*`, `?`, `[...]`
+- [x] Job control: `&`, Ctrl+Z, `isler`, `on`, `arka`; each job in its own process group, terminal handed over with `tcsetpgrp`, terminal settings kept per job
 
 ## Phase 7: Aliases and config → v0.7
 

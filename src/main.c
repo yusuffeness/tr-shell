@@ -1,8 +1,8 @@
 /*
  * main.c - tr-shell main loop.
  *
- * Each iteration: show the prompt, read a line, expand history references,
- * split it into arguments and run it.
+ * Each iteration: report finished background jobs, show the prompt, read
+ * a line, expand history references, then tokenize, parse and run it.
  */
 #define _POSIX_C_SOURCE 200809L
 
@@ -13,10 +13,14 @@
 #include "shell.h"
 #include "ui.h"
 #include "input.h"
+#include "lexer.h"
 #include "parser.h"
-#include "commands.h"
+#include "executor.h"
 #include "history.h"
+#include "jobs.h"
 #include "signals.h"
+
+#define EXIT_SYNTAX 2       /* same as bash for syntax errors */
 
 struct shell g_shell = {
     .last_status      = 0,
@@ -39,13 +43,32 @@ static void finish(int status, long ms)
     g_shell.has_run = 1;
 }
 
-static void run(int argc, char **argv)
+/* Tokenizes, parses and runs one line. Blank lines and comments do nothing. */
+static void run_line(const char *line)
 {
+    struct tokens tokens;
+    struct script script;
     struct timespec start, end;
 
+    if (lex(line, &tokens) != 0) {
+        finish(EXIT_SYNTAX, 0);
+        return;
+    }
+    if (tokens.n == 1) {            /* only T_END */
+        tokens_free(&tokens);
+        return;
+    }
+    int parsed = parse(&tokens, &script);
+    tokens_free(&tokens);
+    if (parsed != 0) {
+        finish(EXIT_SYNTAX, 0);
+        return;
+    }
+
     clock_gettime(CLOCK_MONOTONIC, &start);
-    int status = commands_exec(argc, argv);
+    int status = exec_script(&script);
     clock_gettime(CLOCK_MONOTONIC, &end);
+    script_free(&script);
     finish(status, elapsed_ms(&start, &end));
 }
 
@@ -69,11 +92,11 @@ static int expand_history(char *line, size_t size)
 
 int main(void)
 {
-    char line[MAX_LINE];
-    char *argv[MAX_ARGS];
+    static char line[MAX_LINE];
 
     ui_init();
     signals_init();
+    jobs_init();
     input_init();
     hist_init();
     if (g_shell.interactive)
@@ -81,6 +104,9 @@ int main(void)
 
     while (g_shell.running) {
         const char *prompt = NULL;
+
+        /* "[1]+ Bitti  sleep 10" for background jobs that have finished. */
+        jobs_poll(1);
 
         if (g_shell.interactive) {
             ui_prompt();
@@ -107,21 +133,13 @@ int main(void)
             continue;
         }
         hist_add(line);
-
-        int argc = parse_line(line, argv, MAX_ARGS);
-        if (argc < 0) {
-            finish(1, 0);
-            continue;
-        }
-        if (argc == 0)                  /* empty line */
-            continue;
-
-        run(argc, argv);
+        run_line(line);
 
         /* Builtin output must not lag behind the next command's output. */
         fflush(stdout);
     }
 
+    jobs_cleanup();
     /* Back to the normal screen first, so the goodbye stays visible. */
     ui_shutdown();
     if (g_shell.interactive)
