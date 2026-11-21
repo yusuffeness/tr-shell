@@ -1,0 +1,32 @@
+proje
+├── docs/
+│   └── img/
+│       └── kucuk/
+├── src/
+│   ├── lib/
+│   │   └── a.c
+│   └── main.c
+└── README.md
+
+5 klasör, 3 dosya
+proje
+├── docs/
+├── src/
+└── README.md
+
+2 klasör, 1 dosya
+proje
+├── docs/
+│   └── img/
+├── src/
+│   ├── lib/
+│   └── main.c
+├── .gizli
+└── README.md
+
+4 klasör, 3 dosya
+agac: proje/README.md: bir dizin değil
+agac: yok: böyle bir dosya ya da dizin yok
+agac: bilinmeyen seçenek: -x
+agac: çok fazla argüman
+[exit 1]

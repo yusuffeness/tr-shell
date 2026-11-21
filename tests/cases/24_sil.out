@@ -1,0 +1,35 @@
+'a.txt' çöp kutusuna taşınsın mı? [e/H] 
+Vazgeçildi.
+kutu/
+a.txt
+b.txt
+'a.txt' çöp kutusuna taşınsın mı? [e/H] 
+Çöp kutusuna taşındı: a.txt
+Çöp kutusuna taşındı: b.txt
+Çöp kutusuna taşındı: kutu
+sil: yok.txt: böyle bir dosya ya da dizin yok
+    1  TARIH  a.txt                ← /tmp/trsh-home/a.txt
+    2  TARIH  b.txt                ← /tmp/trsh-home/b.txt
+    3  TARIH  kutu                 ← /tmp/trsh-home/kutu
+
+Geri almak için: copkutusu geri NO   ·   Boşaltmak için: copkutusu bosalt
+Geri alındı: /tmp/trsh-home/a.txt
+Geri alındı: /tmp/trsh-home/b.txt
+copkutusu: çöp kutusunda böyle bir öğe yok: 99
+copkutusu: Kullanım: copkutusu geri NO|AD
+a.txt
+b.txt
+Çöp kutusuna taşındı: a.txt
+Geri alındı: /tmp/trsh-home/a.txt
+Çöp kutusundaki 1 öğe kalıcı olarak silinsin mi? [e/H] 
+Vazgeçildi.
+Çöp kutusundaki 1 öğe kalıcı olarak silinsin mi? [e/H] 
+1 öğe kalıcı olarak silindi.
+Çöp kutusu boş.
+Çöp kutusu boş.
+copkutusu: bilinmeyen alt komut: baska
+sil: bu silinemez: .
+sil: bu silinemez: ..
+sil: bu silinemez: /
+sil: Kullanım: sil [-e] YOL...
+[exit 1]

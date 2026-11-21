@@ -1,0 +1,20 @@
+14
+20
+512
+-4
+2,5
+1
+3,75
+0,3
+0,3333333333
+1,414213562
+hesapla: anlaşılmayan karakter
+hesapla: sıfıra bölme
+hesapla: sıfıra bölme
+hesapla: sayı bekleniyordu
+hesapla: parantezler eşleşmiyor
+hesapla: parantezler eşleşmiyor
+hesapla: anlaşılmayan karakter
+hesapla: sonuç çok büyük ya da tanımsız
+hesapla: Kullanım: hesapla İFADE  (ör. hesapla 3*(4+2))
+[exit 1]

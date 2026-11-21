@@ -1,0 +1,31 @@
+docs/
+src/
+Dosya_1.txt
+dosya_2.txt
+dosya_10.txt
+README.md
+docs/
+src/
+.gizli
+Dosya_1.txt
+dosya_2.txt
+dosya_10.txt
+README.md
+proje/README.md
+proje/src:
+main.c
+
+proje/docs:
+img/
+drwxr-xr-x         -  TARIH  docs/
+drwxr-xr-x         -  TARIH  src/
+-rw-r--r--       0 B  TARIH  Dosya_1.txt
+-rw-r--r--       0 B  TARIH  dosya_2.txt
+-rw-r--r--       0 B  TARIH  dosya_10.txt
+-rw-r--r--       0 B  TARIH  README.md
+2 klasör, 4 dosya, toplam 0 B
+-rw-r--r--       0 B  TARIH  main.c
+0 klasör, 1 dosya, toplam 0 B
+listele: yok: böyle bir dosya ya da dizin yok
+listele: bilinmeyen seçenek: -x
+[exit 1]

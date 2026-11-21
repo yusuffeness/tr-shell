@@ -1,7 +1,8 @@
 tr-shell komutları
 
 Dosya
-  listele    Dizindeki dosyaları listeler
+  listele    Dosyaları listeler; -a gizliler, -d ayrıntılı
+  agac       Klasör yapısını ağaç olarak çizer
   oku        Dosyanın içeriğini gösterir
   kopyala    Dosya ya da klasör kopyalar
   tasi       Taşır ya da yeniden adlandırır
@@ -10,6 +11,8 @@ Dosya
   bul        Bu dizinin altında adı desene uyan dosyaları bulur
   ara        Dosyaların içinde metin arar
   boyut      Dosya ya da klasörün boyutunu gösterir
+  sil        Onay sorar ve çöp kutusuna taşır; -e sormaz
+  copkutusu  Çöp kutusunu listeler, geri alır, boşaltır
 
 Dizin
   gec        Dizin değiştirir; dizin verilmezse ev dizinine gider
@@ -18,6 +21,7 @@ Dizin
   nerdeyim   Bulunduğun dizini gösterir
 
 Sistem
+  sistem     İşletim sistemi, işlemci, bellek, disk ve açık kalma süresi
   surecler   Çalışan süreçleri CPU kullanımına göre listeler
   oldur      Süreci sonlandırır
   disk       Disk kullanımını gösterir
@@ -25,6 +29,11 @@ Sistem
   kimim      Kullanıcı adını gösterir
   tarih      Tarihi ve saati Türkçe gösterir
   zamanla    Komutu çalıştırır ve ne kadar sürdüğünü gösterir
+
+Araçlar
+  hesapla    Hesap makinesi: + - * / % ^ ve parantez
+  not        Hızlı not alır
+  notlar     Notları listeler ya da birini siler
 
 Kabuk
   yardim     Komutları listeler ya da bir komutu açıklar

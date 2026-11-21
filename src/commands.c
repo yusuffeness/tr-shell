@@ -13,7 +13,12 @@
 #include "commands.h"
 #include "builtins.h"
 #include "executor.h"
+#include "calc.h"
+#include "files.h"
 #include "history.h"
+#include "notes.h"
+#include "sysinfo.h"
+#include "trash.h"
 #include "messages.h"
 #include "shell.h"
 #include "theme.h"
@@ -30,11 +35,9 @@ static int bi_zamanla(int argc, char **argv);
 
 /* Some tools take different flags on macOS (BSD) and Linux (GNU). */
 #if defined(__APPLE__)
-#define LS_CMD     RUN("ls", "-G")
 #define PS_CMD     RUN("ps", "-Ao", "pid,user,%cpu,%mem,comm", "-r")
 #define MEM_CMD    RUN("vm_stat")
 #else
-#define LS_CMD     RUN("ls", "--color=auto")
 #define PS_CMD     RUN("ps", "-eo", "pid,user,%cpu,%mem,comm", "--sort=-%cpu")
 #define MEM_CMD    RUN("free", "-h")
 #endif
@@ -42,13 +45,16 @@ static int bi_zamanla(int argc, char **argv);
 #define G_FILES  "Dosya"
 #define G_DIRS   "Dizin"
 #define G_SYSTEM "Sistem"
+#define G_TOOLS  "Araçlar"
 #define G_SHELL  "Kabuk"
 
-static const char *const groups[] = { G_FILES, G_DIRS, G_SYSTEM, G_SHELL };
+static const char *const groups[] = { G_FILES, G_DIRS, G_SYSTEM, G_TOOLS, G_SHELL };
 
 static const struct command table[] = {
-    ALIAS("listele", LS_CMD, G_FILES,
-          "listele [DİZİN]", "Dizindeki dosyaları listeler"),
+    BUILTIN("listele", bi_listele, G_FILES,
+            "listele [-a] [-d] [YOL...]", "Dosyaları listeler; -a gizliler, -d ayrıntılı"),
+    BUILTIN("agac", bi_agac, G_FILES,
+            "agac [-a] [YOL] [DERİNLİK]", "Klasör yapısını ağaç olarak çizer"),
     ALIAS("oku", RUN("cat"), G_FILES,
           "oku DOSYA...", "Dosyanın içeriğini gösterir"),
     ALIAS("kopyala", RUN("cp", "-r"), G_FILES,
@@ -65,6 +71,10 @@ static const struct command table[] = {
           "ara KELİME [YER]", "Dosyaların içinde metin arar"),
     ALIAS("boyut", RUN("du", "-sh"), G_FILES,
           "boyut [YER]", "Dosya ya da klasörün boyutunu gösterir"),
+    BUILTIN("sil", bi_sil, G_FILES,
+            "sil [-e] YOL...", "Onay sorar ve çöp kutusuna taşır; -e sormaz"),
+    BUILTIN("copkutusu", bi_copkutusu, G_FILES,
+            "copkutusu [geri NO|AD | bosalt]", "Çöp kutusunu listeler, geri alır, boşaltır"),
 
     BUILTIN("gec", bi_gec, G_DIRS,
             "gec [DİZİN]", "Dizin değiştirir; dizin verilmezse ev dizinine gider"),
@@ -75,6 +85,8 @@ static const struct command table[] = {
     BUILTIN("nerdeyim", bi_nerdeyim, G_DIRS,
             "nerdeyim", "Bulunduğun dizini gösterir"),
 
+    BUILTIN("sistem", bi_sistem, G_SYSTEM,
+            "sistem", "İşletim sistemi, işlemci, bellek, disk ve açık kalma süresi"),
     ALIAS("surecler", PS_CMD, G_SYSTEM,
           "surecler", "Çalışan süreçleri CPU kullanımına göre listeler"),
     ALIAS("oldur", RUN("kill"), G_SYSTEM,
@@ -89,6 +101,13 @@ static const struct command table[] = {
             "tarih", "Tarihi ve saati Türkçe gösterir"),
     BUILTIN("zamanla", bi_zamanla, G_SYSTEM,
             "zamanla KOMUT [ARGÜMAN...]", "Komutu çalıştırır ve ne kadar sürdüğünü gösterir"),
+
+    BUILTIN("hesapla", bi_hesapla, G_TOOLS,
+            "hesapla İFADE", "Hesap makinesi: + - * / % ^ ve parantez"),
+    BUILTIN("not", bi_not, G_TOOLS,
+            "not METİN...", "Hızlı not alır"),
+    BUILTIN("notlar", bi_notlar, G_TOOLS,
+            "notlar [sil NO]", "Notları listeler ya da birini siler"),
 
     BUILTIN("yardim", bi_yardim, G_SHELL,
             "yardim [KOMUT]", "Komutları listeler ya da bir komutu açıklar"),

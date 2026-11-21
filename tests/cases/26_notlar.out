@@ -1,0 +1,13 @@
+Henüz not yok. Eklemek için: not METİN
+Not eklendi (1).
+Not eklendi (2).
+not: Kullanım: not METİN...
+    1  TARIH  sınav cuma
+    2  TARIH  proje teslimi
+Not 1 silindi.
+    1  TARIH  proje teslimi
+notlar: böyle bir not yok: 5
+notlar: geçersiz sayı: abc
+notlar: Kullanım: notlar sil NO
+notlar: bilinmeyen alt komut: baska
+[exit 1]

@@ -1,0 +1,10 @@
+gec /tmp/trsh-home
+klasor proje/src/lib proje/docs/img/kucuk
+olustur proje/README.md proje/src/main.c proje/src/lib/a.c proje/.gizli
+agac proje
+agac proje 1
+agac -a proje 2
+agac proje/README.md
+agac yok
+agac -x
+agac a b c

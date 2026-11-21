@@ -15,6 +15,7 @@
 
 #include "ui.h"
 #include "git.h"
+#include "util.h"
 #include "messages.h"
 
 #ifndef PATH_MAX
@@ -33,21 +34,6 @@
 static volatile sig_atomic_t alt_screen;
 
 /* ---------------------------------------------------------------- helpers */
-
-/*
- * Display width of a UTF-8 string, counting one column per code point.
- * Good enough for our own text (Turkish letters, box drawing); it does not
- * try to handle double-width characters such as CJK or emoji.
- */
-static int text_width(const char *s)
-{
-    int n = 0;
-
-    for (; *s; s++)
-        if (((unsigned char)*s & 0xC0) != 0x80)
-            n++;
-    return n;
-}
 
 /* Returns the last max_cols columns of s (a pointer into s). */
 static const char *text_tail(const char *s, int max_cols)
@@ -75,7 +61,7 @@ static void repeat(const char *s, int n)
         fputs(s, stdout);
 }
 
-static int term_cols(void)
+int ui_term_cols(void)
 {
     struct winsize ws;
 
@@ -296,7 +282,7 @@ static void banner_compact(void)
 
 void ui_banner(void)
 {
-    if (term_cols() >= BOX_INNER + 2)
+    if (ui_term_cols() >= BOX_INNER + 2)
         banner_full();
     else
         banner_compact();

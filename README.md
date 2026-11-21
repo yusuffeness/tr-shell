@@ -6,13 +6,13 @@ tr-shell started as an Operating Systems course assignment and is being grown in
 complete, everyday-usable shell. It is a hands-on project around the classic process
 APIs: `fork`, `execvp`, `waitpid`, `pipe`, `dup2` and signals.
 
-> **Status:** v0.4 — usability. See [ROADMAP.md](ROADMAP.md) for what comes next.
+> **Status:** v0.5 — custom commands. See [ROADMAP.md](ROADMAP.md) for what comes next.
 
 ```text
 ╭────────────────────────────────────────────────────────────────╮
 │                                                                │
 │   ████████╗██████╗ ███████╗██╗  ██╗                            │
-│   ╚══██╔══╝██╔══██╗██╔════╝██║  ██║   tr-shell 0.4.0           │
+│   ╚══██╔══╝██╔══██╗██╔════╝██║  ██║   tr-shell 0.5.0           │
 │      ██║   ██████╔╝███████╗███████║   Yusuf Enes Kütük         │
 │      ██║   ██╔══██╗╚════██║██╔══██║                            │
 │      ██║   ██║  ██║███████║██║  ██║   ~/projects/tr-shell      │
@@ -49,6 +49,8 @@ listel: komut bulunamadı. Bunu mu demek istediniz: listele?
 - **Ctrl+C** drops the line you are typing or stops the running command — never the
   shell itself
 - **"Did you mean …?"** when a command name has a typo
+- **Commands written from scratch in C:** `listele`, `agac`, `sistem`, a calculator,
+  quick notes, and a `sil` that moves files to a trash you can restore from
 - **Turkish commands** next to the usual ones — `ls`, `git`, `gcc` and everything else
   in your `PATH` still work
 - **Built-in help:** `yardim` lists every command, `yardim KOMUT` explains one
@@ -61,7 +63,8 @@ listel: komut bulunamadı. Bunu mu demek istediniz: listele?
 
 | Group | Command | What it does | Runs |
 | --- | --- | --- | --- |
-| Files | `listele [DIR]` | List files | `ls` |
+| Files | `listele [-a] [-d] [PATH...]` | List files: folders first, colors, `-a` hidden, `-d` details | builtin |
+| | `agac [-a] [PATH] [DEPTH]` | Directory tree (depth 3 by default) | builtin |
 | | `oku FILE...` | Show file contents | `cat` |
 | | `kopyala SRC DST` | Copy files or folders | `cp -r` |
 | | `tasi SRC DST` | Move or rename | `mv` |
@@ -70,17 +73,23 @@ listel: komut bulunamadı. Bunu mu demek istediniz: listele?
 | | `bul PATTERN` | Find files by name below the current directory | `find . -name` |
 | | `ara WORD [PATH]` | Search text inside files | `grep -rn` |
 | | `boyut [PATH]` | Show size | `du -sh` |
+| | `sil [-e] PATH...` | Ask, then move to the trash (`-e`: don't ask) | builtin |
+| | `copkutusu` | List the trash; `geri NO\|NAME` restores, `bosalt` empties | builtin |
 | Directories | `gec [DIR]` | Change directory; home if no argument | builtin |
 | | `geri` | Go back to the previous directory | builtin |
 | | `ev` | Go to the home directory | builtin |
 | | `nerdeyim` | Print the current directory | builtin |
-| System | `surecler` | List processes by CPU usage | `ps` |
+| System | `sistem` | OS, CPU, memory, disk, uptime and load at a glance | builtin |
+| | `surecler` | List processes by CPU usage | `ps` |
 | | `oldur PID...` | Terminate a process | `kill` |
 | | `disk` | Disk usage | `df -h` |
 | | `bellek` | Memory usage | `free -h` |
 | | `kimim` | Current user | `whoami` |
 | | `tarih` | Date and time in Turkish | builtin |
 | | `zamanla CMD...` | Run a command and show how long it took | builtin |
+| Tools | `hesapla EXPR` | Calculator: `+ - * / % ^`, parentheses, `1,5` or `1.5` | builtin |
+| | `not TEXT...` | Save a quick note | builtin |
+| | `notlar [sil N]` | List notes or delete one | builtin |
 | Shell | `yardim [CMD]` | Help | builtin |
 | | `gecmis [N]` | Command history; rerun with `!N`, `!!` or `!PREFIX` | builtin |
 | | `tema [NAME]` | List themes or switch: `mavi`, `yesil`, `mor`, `turuncu`, `sade` | builtin |
@@ -89,7 +98,8 @@ listel: komut bulunamadı. Bunu mu demek istediniz: listele?
 | | `cikis` / `exit` | Leave the shell | builtin |
 | | `cd DIR` | Classic change directory | builtin |
 
-Extra arguments are passed through, so `listele -la` runs `ls --color=auto -la`.
+For commands that run a standard tool, extra arguments are passed through:
+`kopyala -v a b` runs `cp -r -v a b`.
 
 ## Requirements
 
@@ -134,6 +144,12 @@ src/
   signals.c     Ctrl+C, Ctrl+\ and Ctrl+Z handling
   suggest.c     "did you mean" suggestions
   config.c      paths under ~/.trsh
+  files.c       listele and agac
+  sysinfo.c     sistem
+  trash.c       sil and copkutusu
+  calc.c        hesapla (recursive-descent parser)
+  notes.c       not and notlar
+  util.c        sizes, dates, yes/no questions
   ui.c          alternate screen, banner, prompt, error output
   theme.c       color themes and the `tema` command
   git.c         git branch for the prompt

@@ -1,0 +1,11 @@
+gec /tmp/trsh-home
+klasor proje/src proje/docs/img
+olustur proje/README.md proje/src/main.c proje/.gizli proje/dosya_10.txt proje/dosya_2.txt proje/Dosya_1.txt
+listele proje
+listele -a proje
+listele proje/README.md
+listele proje/src proje/docs
+listele -d proje
+listele -la proje/src
+listele yok
+listele -x

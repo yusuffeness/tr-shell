@@ -18,6 +18,7 @@ WARN     := -std=c11 -Wall -Wextra -Werror -pedantic
 CPPFLAGS += -MMD -MP
 LDFLAGS  ?=
 LDLIBS   ?=
+LDLIBS   += -lm
 
 PREFIX   ?= $(HOME)/.local
 BINDIR   := $(PREFIX)/bin

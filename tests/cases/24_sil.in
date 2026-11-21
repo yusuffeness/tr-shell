@@ -1,0 +1,30 @@
+gec /tmp/trsh-home
+olustur a.txt b.txt
+klasor kutu/ic
+sil a.txt
+h
+listele
+sil a.txt
+e
+sil -e b.txt kutu yok.txt
+listele
+copkutusu
+copkutusu geri a.txt
+copkutusu geri 2
+copkutusu geri 99
+copkutusu geri
+listele
+olustur a.txt
+sil -e a.txt
+copkutusu geri a.txt
+copkutusu bosalt
+h
+copkutusu bosalt
+e
+copkutusu
+copkutusu bosalt -e
+copkutusu baska
+sil .
+sil ..
+sil /
+sil

@@ -29,6 +29,14 @@ void ui_init(void);
 /* Leaves the alternate screen. Safe to call more than once. */
 void ui_shutdown(void);
 
+/* Width of the terminal in columns (80 if unknown). */
+int ui_term_cols(void);
+
+/* Colors for file types in listele and agac. */
+#define DIR_COLOR  ACCENT
+#define EXEC_COLOR GREEN
+#define LINK_COLOR C("\033[36m")
+
 void ui_banner(void);
 
 /* Prints the first prompt line (user, directory, branch, time, status). */

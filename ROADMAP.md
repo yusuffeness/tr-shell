@@ -8,8 +8,8 @@ The project is built in nine phases. Each phase ends with one commit and a versi
 | 2 | Turkish commands | v0.2 | ✅ Done |
 | 3 | Look and feel | v0.3 | ✅ Done |
 | 4 | Usability | v0.4 | ✅ Done |
-| 5 | Custom commands | v0.5 | ⏳ Next |
-| 6 | Shell features | v0.6 | |
+| 5 | Custom commands | v0.5 | ✅ Done |
+| 6 | Shell features | v0.6 | ⏳ Next |
 | 7 | Aliases and config | v0.7 | |
 | 8 | Scripting (optional) | v0.8 | |
 | 9 | Release | v1.0 | |
@@ -51,13 +51,15 @@ The project is built in nine phases. Each phase ends with one commit and a versi
 - [x] "Did you mean …?" suggestions for mistyped commands (edit distance)
 - [x] `zamanla`: wall-clock, user and system time of a command
 
-## Phase 5: Custom commands → v0.5
+## Phase 5: Custom commands → v0.5 ✅
 
-- [ ] `listele` rewritten in C (colors, human-readable sizes)
-- [ ] `agac` (directory tree)
-- [ ] `sistem` (CPU, memory, uptime)
-- [ ] `sil` (asks for confirmation, moves to trash) and `copkutusu`
-- [ ] `hesapla` (calculator) and `not` / `notlar` (quick notes)
+- [x] `listele` written in C: directories first, natural order, colors, columns on a terminal, `-a` hidden files, `-d` details with human-readable sizes
+- [x] `agac`: directory tree with depth limit, without following links
+- [x] `sistem`: OS, kernel, CPU, memory and swap, disk, uptime, load and process count, with usage bars
+- [x] `sil`: asks first and moves to `~/.trsh/cop` instead of deleting; refuses `.`, `..` and `/`
+- [x] `copkutusu`: list, restore by number or name, empty after confirmation
+- [x] `hesapla`: recursive-descent calculator with `+ - * / % ^`, parentheses and decimal commas
+- [x] `not` / `notlar`: quick notes in `~/.trsh/notlar`
 
 ## Phase 6: Shell features → v0.6
 
