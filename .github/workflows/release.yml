@@ -10,7 +10,8 @@ permissions:
 jobs:
   release:
     name: Build and publish
-    runs-on: ubuntu-latest
+    # The oldest supported release: binaries built here also run on newer ones.
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v5
 

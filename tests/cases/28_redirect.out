@@ -5,8 +5,8 @@ iki
 2
 yeni
 cat: yok.txt: No such file or directory
-cat: yok.txt: No such file or directory
-yeni
+önce hata
+sonra çıktı
 2 hata.txt
 gec - Dizin değiştirir; dizin verilmezse ev dizinine gider
 Kullanım: gec [DİZİN]

@@ -8,7 +8,7 @@ echo yeni > dosya.txt
 oku dosya.txt
 oku yok.txt 2> hata.txt
 oku hata.txt
-oku yok.txt dosya.txt > hepsi.txt 2>&1
+sh -c 'echo önce hata >&2; echo sonra çıktı' > hepsi.txt 2>&1
 oku hepsi.txt
 oku yok.txt 2>> hata.txt
 wc -l hata.txt

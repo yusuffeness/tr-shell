@@ -2,9 +2,9 @@ echo merhaba dünya | tr a-z A-Z
 printf 'c\nb\na\n' | sort | head -2
 printf 'bir\niki\nüç\n' | wc -l
 yardim | head -3
-seq 1 100000 | head -1
+seq 1 100000 2> /dev/null | head -1
 olmayan_komut | echo sağ taraf çalışır
-echo sol | false
+true | false
 echo $?
 false | true
 echo $?

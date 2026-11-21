@@ -15,11 +15,14 @@ concurrency:
 
 jobs:
   test:
-    name: ${{ matrix.cc }} · readline=${{ matrix.readline }}
-    runs-on: ubuntu-latest
+    name: ${{ matrix.os }} · ${{ matrix.cc }} · readline=${{ matrix.readline }}
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
+        # 24.04 ships GNU coreutils, newer releases the Rust rewrite (uutils):
+        # the tests must not depend on either.
+        os: [ubuntu-24.04, ubuntu-latest]
         cc: [gcc, clang]
         readline: [1, 0]
     steps:
@@ -27,6 +30,13 @@ jobs:
 
       - name: Install dependencies
         run: sudo apt-get update && sudo apt-get install -y libreadline-dev clang
+
+      - name: Environment
+        run: |
+          grep PRETTY_NAME /etc/os-release
+          ${{ matrix.cc }} --version | head -n 1
+          cat --version | head -n 1
+          echo "umask $(umask)"
 
       - name: Build
         run: make CC=${{ matrix.cc }} READLINE=${{ matrix.readline }}

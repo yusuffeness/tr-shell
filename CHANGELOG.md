@@ -9,8 +9,10 @@ All notable changes to tr-shell are listed here. The format follows
 First stable release.
 
 ### Added
-- Continuous integration on GitHub Actions: gcc and clang, with and without readline,
-  an AddressSanitizer + UBSan run of the whole test suite, and an install check.
+- Continuous integration on GitHub Actions: Ubuntu 24.04 (GNU coreutils) and the
+  latest Ubuntu (Rust coreutils), gcc and clang, with and without readline, an
+  AddressSanitizer + UBSan run of the whole test suite, and an install check.
+- Failing tests are reported as annotations on GitHub.
 - Release workflow: every `v*` tag is built, tested and published with a Linux binary
   archive and its SHA-256 checksum.
 - Manual page (`man trsh`), installed by `make install`.
@@ -20,6 +22,8 @@ First stable release.
 
 ### Changed
 - `make install` also installs the man page; `make uninstall` removes it.
+- Tests run with a fixed umask and no longer depend on the coreutils implementation
+  (message order, wording and broken-pipe behaviour) or on the machine having swap.
 - The example scripts folder is now `examples/` (was `ornekler/`).
 
 ## [0.8.0] - 2026-11-21
