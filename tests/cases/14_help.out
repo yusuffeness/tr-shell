@@ -48,6 +48,9 @@ Kabuk
   tema       Temaları listeler ya da temayı değiştirir
   temizle    Ekranı temizler
   hakkinda   Sürüm ve yazar bilgisi
+  kaynak     Bir betik dosyasını bu kabukta çalıştırır
+  kir        Döngüden çıkar (dongu / her içinde)
+  devam      Döngünün sonraki turuna geçer
   cikis      Kabuktan çıkar
   cd         Dizin değiştirir (gec'in klasik hâli)
   exit       Kabuktan çıkar (cikis ile aynı)

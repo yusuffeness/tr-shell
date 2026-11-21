@@ -1,0 +1,11 @@
+degisken ONCE=önce
+kaynak tests/helpers/lib.trsh
+echo $KUTUPHANE
+selamla
+kaynak
+kaynak /yok/dosya
+cikis 1 2
+cikis abc
+echo hâlâ burada
+cikis 300
+echo buraya gelmez

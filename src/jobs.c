@@ -280,6 +280,9 @@ int jobs_wait_foreground(struct job *j)
     }
 
     report_signal(j);
+    int last = j->procs[j->nprocs - 1].status;
+    if (WIFSIGNALED(last) && WTERMSIG(last) == SIGINT)
+        g_shell.interrupted = 1;    /* Ctrl+C also ends a loop around it */
     int status = job_status(j);
     job_remove(j);
     return status;

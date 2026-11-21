@@ -17,6 +17,7 @@ enum tok_type {
     T_AMP,          /* &    */
     T_AND,          /* &&   */
     T_SEMI,         /* ;    */
+    T_NEWLINE,      /* end of a line: separates commands like ;  */
     T_LESS,         /* <    */
     T_GREAT,        /* >    */
     T_DGREAT,       /* >>   */
@@ -37,12 +38,16 @@ struct tokens {
 };
 
 /*
- * Tokenizes line. Text after an unquoted # at the start of a word is a
- * comment. Returns 0, or -1 after printing an error (unclosed quote).
+ * Tokenizes text, which may span several lines. Text after an unquoted #
+ * at the start of a word is a comment, up to the end of its line.
+ * Returns 0, or -1 after printing an error (unclosed quote or $( ).
  * The list always ends with a T_END token.
  */
 int lex(const char *line, struct tokens *out);
 
 void tokens_free(struct tokens *t);
+
+/* For s pointing at "$(": the character after the matching ")", or NULL. */
+const char *lex_skip_subst(const char *s);
 
 #endif

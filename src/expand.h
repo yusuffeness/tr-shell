@@ -7,6 +7,9 @@
  *   '...'                   -> literal, nothing expanded
  *   "..."                   -> variables expanded; \" \\ \$ escaped
  *   \c                      -> the character c, literally
+ *   $(komut)                -> what the command printed (unquoted: split
+ *                              into words at white space)
+ *   $1 .. $9  $#  $@  $0    -> script arguments
  *   * ? [...] (unquoted)    -> matching file names, sorted; the pattern
  *                              itself if nothing matches
  */
@@ -15,7 +18,10 @@
 
 #include "strvec.h"
 
-/* Expands raw into one or more words appended to out. Returns 0 or -1. */
+/*
+ * Expands raw into zero or more words appended to out (zero when it was
+ * only an empty variable). Returns 0 or -1.
+ */
 int expand_word(const char *raw, struct strvec *out);
 
 /* Expands raw into exactly one string (no file-name matching). Caller frees. */

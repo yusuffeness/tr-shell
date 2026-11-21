@@ -7,13 +7,13 @@ complete, everyday-usable shell. It is a hands-on project around the classic pro
 APIs: `fork`, `execvp`, `waitpid`, `pipe`, `dup2`, signals, process groups and
 `tcsetpgrp`.
 
-> **Status:** v0.7 — aliases and config. See [ROADMAP.md](ROADMAP.md) for what comes next.
+> **Status:** v0.8 — scripting. See [ROADMAP.md](ROADMAP.md) for what comes next.
 
 ```text
 ╭────────────────────────────────────────────────────────────────╮
 │                                                                │
 │   ████████╗██████╗ ███████╗██╗  ██╗                            │
-│   ╚══██╔══╝██╔══██╗██╔════╝██║  ██║   tr-shell 0.7.0           │
+│   ╚══██╔══╝██╔══██╗██╔════╝██║  ██║   tr-shell 0.8.0           │
 │      ██║   ██████╔╝███████╗███████║   Yusuf Enes Kütük         │
 │      ██║   ██╔══██╗╚════██║██╔══██║                            │
 │      ██║   ██║  ██║███████║██║  ██║   ~/projects/tr-shell      │
@@ -40,6 +40,8 @@ listel: komut bulunamadı. Bunu mu demek istediniz: listele?
 
 - **A real shell language:** quotes, pipes, redirection, `&&` / `||` / `;`, variables,
   file name patterns and job control — see [Shell syntax](#shell-syntax)
+- **Scripts in Turkish:** `eger` / `degilse`, `dongu`, `her`, `$(...)` and script
+  arguments; run files with `trsh betik.trsh` — see [Scripting](#scripting)
 - **Its own screen.** Opens on the terminal's alternate screen like `vim` or `less`;
   your previous terminal output comes back when you leave
 - **Welcome box** with logo, version, directory and date (a plain header on narrow
@@ -108,7 +110,9 @@ listel: komut bulunamadı. Bunu mu demek istediniz: listele?
 | | `tema [NAME]` | List themes or switch: `mavi`, `yesil`, `mor`, `turuncu`, `sade` | builtin |
 | | `temizle` | Clear the screen | builtin |
 | | `hakkinda` | Version and author | builtin |
-| | `cikis` / `exit` | Leave the shell | builtin |
+| | `kaynak FILE` | Run a script in the current shell (`source`) | builtin |
+| | `kir` / `devam` | Leave a loop / go to its next turn (`break` / `continue`) | builtin |
+| | `cikis [CODE]` / `exit` | Leave the shell, optionally with an exit code | builtin |
 | | `cd DIR` | Classic change directory | builtin |
 
 For commands that run a standard tool, extra arguments are passed through:
@@ -126,14 +130,59 @@ AD=Enes; echo "Merhaba $AD" ~         # variables: $AD ${AD} $? $$ ~
 DEBUG=1 ./program                      # variable for one command only
 oku *.c                                # * ? [...] match file names
 sleep 100 &                            # background job
+echo "bugün $(tarih)"                  # command substitution
+# a comment
 ```
 
 **Job control:** Ctrl+Z stops the running job, `isler` lists jobs, `on` brings one back to
 the foreground and `arka` lets it continue in the background. Ctrl+C stops only the
 foreground job, never the shell.
 
-Not supported (yet): `$(...)`, here-documents, `if` / loops (see the roadmap) and word
-splitting of unquoted variables.
+Not supported: here-documents, functions and word splitting of unquoted variables
+(`$(...)` and `$@` are split, as in bash).
+
+## Scripting
+
+Control flow uses Turkish keywords. Blocks can be written on one line or on several;
+in the interactive shell, an open block shows a `┆` prompt until its `son`.
+
+```bash
+eger test -f notlar.txt ise         # if ... then
+    echo "notlar var"
+degilse                             # else
+    echo "notlar yok"
+son                                 # fi
+
+dongu test $i -lt 3 yap echo $i; degisken i=$(expr $i + 1); son   # while
+
+her dosya icin *.c yap              # for ... in ... do
+    echo "derleniyor: $dosya"
+son
+```
+
+| Keyword | bash | |
+|---|---|---|
+| `eger KOMUT ise ... [degilse ...] son` | `if; then; else; fi` | `ise` may follow the condition without a `;` |
+| `dongu KOMUT yap ... son` | `while; do; done` | |
+| `her AD icin KELİMELER yap ... son` | `for in; do; done` | words are globbed and expanded |
+| `kir`, `devam` | `break`, `continue` | |
+
+Keywords count only where a command starts and when unquoted: `echo son` prints
+`son`, and `"ise"` is an ordinary word.
+
+**Scripts.** Put commands in a file and run it with `trsh betik.trsh arg1 arg2`, or
+make it executable with a `#!/usr/bin/env trsh` first line. Inside, `$0` is the script
+name, `$1` … `$9` the arguments, `$#` their count and `$@` all of them (`"$@"` keeps
+each argument whole). `cikis 3` ends the script with exit code 3.
+
+```bash
+trsh ornekler/selam.trsh Ayşe Mehmet     # run a script with arguments
+trsh -c 'echo $0 $1' ad birinci          # run one command string
+kaynak ayarlarim.trsh                    # run a file in this shell (keeps variables)
+```
+
+**Startup file.** If `~/.trsh/baslangic` exists, the interactive shell runs it before
+showing the prompt — a place for variables and aliases, like `~/.bashrc`.
 
 ## Configuration
 
@@ -185,6 +234,13 @@ make debug    # builds with AddressSanitizer and UBSan
 make install  # installs to ~/.local/bin (override with PREFIX=...)
 ```
 
+```text
+trsh                          interactive shell
+trsh FILE [ARG...]            run a script
+trsh -c 'COMMAND' [NAME ARG...]   run one command string
+trsh --surum | --yardim       version | usage
+```
+
 For the box and logo to line up, use a terminal font with box-drawing characters
 (Windows Terminal with Cascadia Code, iTerm2, GNOME Terminal and most modern
 terminals work out of the box).
@@ -193,14 +249,15 @@ terminals work out of the box).
 
 ```text
 src/
-  main.c        main loop
+  main.c        options (trsh FILE, -c) and the interactive loop
+  run.c         running text, files, $(...) capture; kaynak
   shell.h       shared constants and shell state
   commands.c    command table, dispatch and help
   builtins.c    commands that run inside the shell (gec, geri, tarih ...)
   lexer.c       tokens: words, quotes, operators
-  parser.c      syntax tree: lists, and/or, pipelines, redirections
-  expand.c      variables, ~, quote removal, file name patterns
-  executor.c    pipes, redirections, builtins in the shell process
+  parser.c      syntax tree: lists, and/or, pipelines, redirections, eger/dongu/her
+  expand.c      variables, $(...), $1 $# $@, ~, quote removal, file name patterns
+  executor.c    pipes, redirections, builtins in the shell process, loops
   jobs.c        job control: process groups, terminal, isler/on/arka
   strvec.c      growable string arrays
   input.c       reading a line (readline or plain)
@@ -220,8 +277,10 @@ src/
   theme.c       color themes and the `tema` command
   git.c         git branch for the prompt
   messages.c/h  all user-facing text
+ornekler/       example scripts
 tests/
   run.sh        test runner
+  helpers/      scripts and files used by the tests
   cases/        *.in inputs, *.out expected outputs, optional *.sed filters
 ```
 

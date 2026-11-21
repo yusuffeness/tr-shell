@@ -1,0 +1,14 @@
+eger true ise
+    echo "cok satirli | boru" |
+        tr a-z A-Z
+son
+echo a &&
+    echo b
+dongu true yap
+    echo bir kez
+    kir
+son # yorum
+# sadece yorum
+echo "# yorum değil"  # ama bu yorum
+echo dış; son
+her x icin a b yap echo $x

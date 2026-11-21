@@ -30,6 +30,7 @@ struct xredir {
 };
 
 struct xcmd {
+    const struct command *compound;     /* eger / dongu / her, or NULL */
     struct strvec argv;
     struct strvec assigns;      /* NAME=value pairs before the command */
     struct xredir *redirs;
@@ -53,15 +54,19 @@ static int expand_command(const struct command *c, struct xcmd *x)
 
     memset(x, 0, sizeof *x);
 
+    /* A compound command expands its own words when it runs. */
+    if (c->type != CT_SIMPLE)
+        x->compound = c;
+
     /* Leading NAME=value words are assignments, not the command. */
-    for (; i < c->words.n && is_assignment(c->words.v[i]); i++) {
+    for (; !x->compound && i < c->words.n && is_assignment(c->words.v[i]); i++) {
         char *v = expand_single(c->words.v[i]);
         if (v == NULL || strvec_push_owned(&x->assigns, v) != 0) {
             free(v);
             return -1;
         }
     }
-    for (; i < c->words.n; i++)
+    for (; !x->compound && i < c->words.n; i++)
         if (expand_word(c->words.v[i], &x->argv) != 0)
             return -1;
 
@@ -143,6 +148,8 @@ static int run_here(int (*fn)(int, char **), struct xcmd *x)
 
     if (apply_redirs(x) != 0)
         status = 1;
+    else if (x->compound != NULL)
+        status = exec_compound(x->compound);
     else if (fn != NULL)
         status = fn((int)x->argv.n, x->argv.v);
     else
@@ -183,6 +190,15 @@ static void child_run(struct xcmd *x, int in_fd, int out_fd, int background)
     }
     if (apply_redirs(x) != 0)
         _exit(1);
+    if (x->compound != NULL) {
+        /* A loop in a pipeline runs in this child, like a subshell. */
+        jobs_disable();
+        g_shell.interactive = 0;
+        int status = exec_compound(x->compound);
+        fflush(stdout);
+        fflush(stderr);
+        _exit(status);
+    }
     apply_assigns(x);
     if (x->argv.n == 0)
         _exit(0);
@@ -286,6 +302,11 @@ static int run_pipeline(const struct pipeline *p, int background, const char *te
     if (p->ncmds == 1 && !background) {
         struct xcmd *x = &xs[0];
 
+        /* eger / dongu / her: run in the shell, so variables stick. */
+        if (x->compound != NULL) {
+            status = run_here(NULL, x);
+            goto done;
+        }
         /* Only assignments and/or redirections: X=1, > empty.txt */
         if (x->argv.n == 0) {
             apply_assigns(x);
@@ -307,12 +328,22 @@ done:
     return status;
 }
 
+/* Stop running the rest of a list: exit, kir / devam, or Ctrl+C. */
+static int should_stop(void)
+{
+    if (g_sigint) {
+        g_sigint = 0;
+        g_shell.interrupted = 1;
+    }
+    return !g_shell.running || g_shell.loop_ctl != LOOP_NONE || g_shell.interrupted;
+}
+
 static int run_and_or(const struct and_or *ao, const char *text)
 {
     int status = run_pipeline(&ao->pipes[0], 0, text);
     g_shell.last_status = status;
 
-    for (size_t i = 1; i < ao->npipes && g_shell.running; i++) {
+    for (size_t i = 1; i < ao->npipes && !should_stop(); i++) {
         enum andor_op op = ao->ops[i - 1];
         if ((op == OP_AND && status != 0) || (op == OP_OR && status == 0))
             continue;
@@ -362,13 +393,87 @@ int exec_script(const struct script *s)
 {
     int status = g_shell.last_status;
 
-    for (size_t i = 0; i < s->nitems && g_shell.running; i++) {
+    for (size_t i = 0; i < s->nitems && !should_stop(); i++) {
         const struct item *it = &s->items[i];
 
         status = it->background ? run_in_background(it) : run_and_or(&it->ao, it->text);
         g_shell.last_status = status;
     }
     return status;
+}
+
+/* ------------------------------------------------------------ compound */
+
+/* After one pass of a loop body: 1 if the loop should end. */
+static int loop_should_end(void)
+{
+    if (g_shell.loop_ctl == LOOP_BREAK) {
+        g_shell.loop_ctl = LOOP_NONE;
+        return 1;
+    }
+    if (g_shell.loop_ctl == LOOP_CONTINUE)
+        g_shell.loop_ctl = LOOP_NONE;
+    return !g_shell.running || g_shell.interrupted;
+}
+
+static int run_while(const struct command *c)
+{
+    int status = 0;
+
+    g_shell.loop_depth++;
+    for (;;) {
+        int cond = exec_script(c->cond);
+        if (should_stop() || cond != 0)
+            break;
+        status = exec_script(c->body);
+        if (loop_should_end())
+            break;
+    }
+    g_shell.loop_depth--;
+    return status;
+}
+
+static int run_for(const struct command *c)
+{
+    struct strvec words = { NULL, 0, 0 };
+    int status = 0;
+
+    for (size_t i = 0; i < c->words.n; i++)
+        if (expand_word(c->words.v[i], &words) != 0) {
+            strvec_free(&words);
+            return 1;
+        }
+
+    g_shell.loop_depth++;
+    for (size_t i = 0; i < words.n; i++) {
+        setenv(c->var, words.v[i], 1);
+        status = exec_script(c->body);
+        if (loop_should_end())
+            break;
+    }
+    g_shell.loop_depth--;
+    strvec_free(&words);
+    return status;
+}
+
+int exec_compound(const struct command *c)
+{
+    switch (c->type) {
+    case CT_IF: {
+        int cond = exec_script(c->cond);
+        if (should_stop())
+            return cond;
+        if (cond == 0)
+            return exec_script(c->body);
+        return c->else_body ? exec_script(c->else_body) : 0;
+    }
+    case CT_WHILE:
+        return run_while(c);
+    case CT_FOR:
+        return run_for(c);
+    default:
+        return 0;
+    }
 }
 
 int exec_argv(int argc, char **argv)

@@ -5,7 +5,7 @@
 #define TRSH_SHELL_H
 
 #define TRSH_NAME    "tr-shell"
-#define TRSH_VERSION "0.7.0"
+#define TRSH_VERSION "0.8.0"
 #define TRSH_AUTHOR  "Yusuf Enes Kütük"
 #define TRSH_URL     "https://github.com/yusuffeness/tr-shell"
 
@@ -17,9 +17,20 @@ struct shell {
     long last_duration_ms;  /* wall-clock time of the last command */
     int has_run;            /* 1 once at least one command has run */
     int interactive;        /* 1 if input comes from a terminal */
+    int script_mode;        /* running a file or -c: never interactive */
     int use_color;          /* 1 if output goes to a terminal and NO_COLOR is unset */
     int running;            /* main loop stops when this becomes 0 */
+
+    int loop_depth;         /* how many dongu / her loops are running */
+    int loop_ctl;           /* LOOP_BREAK or LOOP_CONTINUE after kir / devam */
+    int interrupted;        /* Ctrl+C stopped a command: abandon the line */
+
+    char **params;          /* $1 $2 ... of a script (NULL-terminated) */
+    int nparams;            /* $# */
+    const char *param0;     /* $0 */
 };
+
+enum { LOOP_NONE, LOOP_BREAK, LOOP_CONTINUE };
 
 extern struct shell g_shell;
 

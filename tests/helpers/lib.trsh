@@ -1,0 +1,4 @@
+# Sourced by 43_kaynak: sets a variable in the calling shell.
+KUTUPHANE=yuklendi
+takmaad selamla='echo merhaba'
+echo "kaynak icinde: $ONCE"

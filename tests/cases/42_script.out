@@ -1,0 +1,20 @@
+ad=tests/helpers/args.trsh sayi=3
+arg: bir
+arg: iki üç
+arg: dört
+çıkış kodu: 3
+ad=tests/helpers/args.trsh sayi=0
+argüman yok
+çıkış kodu: 0
+ad x 2 x y z
+[trsh]
+çıkış kodu: 1
+tr-shell: sözdizimi hatası: komut tamamlanmadan girdi bitti ('son' ya da | && || sonrası eksik)
+çıkış kodu: 2
+tr-shell: -c bir komut bekliyor
+çıkış kodu: 2
+tr-shell: /yok/betik.trsh: böyle bir dosya ya da dizin yok
+çıkış kodu: 127
+tr-shell 
+boruyla geldi
+[exit 0]

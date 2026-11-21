@@ -77,7 +77,22 @@
 
 #define MSG_SYNTAX          "sözdizimi hatası: beklenmeyen '%s'"
 #define MSG_SYNTAX_END      "sözdizimi hatası: satır beklenmedik şekilde bitti"
+#define MSG_SYNTAX_MISSING_END "sözdizimi hatası: komut tamamlanmadan girdi bitti ('son' ya da | && || sonrası eksik)"
+#define MSG_NOT_IN_LOOP     "yalnızca dongu ya da her içinde kullanılabilir"
+#define MSG_SOURCE_TOO_DEEP "çok fazla iç içe kaynak"
+#define MSG_OPT_C_NEEDS_ARG "-c bir komut bekliyor"
+#define MSG_UNKNOWN_OPTION_STR "bilinmeyen seçenek: %s"
+#define MSG_USAGE \
+    "%s %s - Türkçe komutlu Unix kabuğu\n" \
+    "\n" \
+    "Kullanım:\n" \
+    "  trsh                     etkileşimli kabuk\n" \
+    "  trsh DOSYA [ARG...]      betik çalıştırır ($1, $2 ... argümanlar)\n" \
+    "  trsh -c 'KOMUT' [AD ARG...]   tek komut çalıştırır\n" \
+    "  trsh --surum             sürümü gösterir\n" \
+    "  trsh --yardim            bu metni gösterir\n"
 #define MSG_UNCLOSED_QUOTE  "kapanmamış tırnak: %c"
+#define MSG_UNCLOSED_SUBST  "kapanmamış $( ... )"
 #define MSG_NO_MEMORY       "bellek yetersiz"
 #define MSG_BAD_ASSIGNMENT  "geçersiz atama: %s (AD=DEĞER biçiminde olmalı)"
 

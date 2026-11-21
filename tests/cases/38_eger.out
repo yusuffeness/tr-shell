@@ -1,0 +1,15 @@
+evet
+hayir
+dosya var
+klasör yok
+iç içe
+durum: 0
+durum: 1
+yönlendirme
+BORU
+son ise yap
+ise: komut bulunamadı
+tr-shell: sözdizimi hatası: beklenmeyen 'son'
+tr-shell: sözdizimi hatası: beklenmeyen 'ise'
+tr-shell: sözdizimi hatası: beklenmeyen 'ise'
+[exit 2]

@@ -1,0 +1,16 @@
+bugün: pazartesi
+a b c
+a b c
+x1 2y
+dış iç
+satır1
+satır2
+7
+- bir
+- iki
+[]
+$(echo tek tırnak)
+derin
+tr-shell: kapanmamış $( ... )
+durum 3
+[exit 0]

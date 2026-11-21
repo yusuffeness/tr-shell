@@ -67,39 +67,95 @@ static size_t match_operator(const char *s, enum tok_type *type)
     return 0;
 }
 
+static const char *skip_subst(const char *s);
+
+const char *lex_skip_subst(const char *s)
+{
+    return skip_subst(s);
+}
+
+/* Skips a "..." string starting at s (on the quote). NULL if unclosed. */
+static const char *skip_dquote(const char *s)
+{
+    s++;
+    while (*s && *s != '"') {
+        if (*s == '\\' && s[1]) {
+            s += 2;
+        } else if (*s == '$' && s[1] == '(') {
+            s = skip_subst(s);
+            if (s == NULL)
+                return NULL;
+        } else {
+            s++;
+        }
+    }
+    return *s == '"' ? s + 1 : NULL;
+}
+
 /*
- * Finds the end of the word starting at s. Quotes and backslashes are
- * skipped over (but kept in the word). Returns NULL on an unclosed quote.
+ * Skips a $(...) starting at s (on the $), allowing nested parentheses,
+ * quotes and further $(...) inside. NULL if it is never closed.
+ */
+static const char *skip_subst(const char *s)
+{
+    int depth = 1;
+
+    s += 2;
+    while (*s) {
+        if (*s == '\\' && s[1]) {
+            s += 2;
+        } else if (*s == '\'') {
+            const char *close = strchr(s + 1, '\'');
+            if (close == NULL)
+                return NULL;
+            s = close + 1;
+        } else if (*s == '"') {
+            s = skip_dquote(s);
+            if (s == NULL)
+                return NULL;
+        } else if (*s == '$' && s[1] == '(') {
+            s = skip_subst(s);
+            if (s == NULL)
+                return NULL;
+        } else {
+            if (*s == '(')
+                depth++;
+            else if (*s == ')' && --depth == 0)
+                return s + 1;
+            s++;
+        }
+    }
+    return NULL;
+}
+
+/*
+ * Finds the end of the word starting at s. Quotes, backslashes and $(...)
+ * are skipped over (but kept in the word). Returns NULL if one of them is
+ * never closed, with *unclosed set to the quote or to '('.
  */
 static const char *word_end(const char *s, char *unclosed)
 {
     while (*s && *s != ' ' && *s != '\t' && *s != '\n' && !is_operator_char(*s)) {
+        const char *next;
+
         if (*s == '\\') {
-            s++;
-            if (*s)
-                s++;
+            next = s[1] ? s + 2 : s + 1;
         } else if (*s == '\'') {
             const char *close = strchr(s + 1, '\'');
-            if (close == NULL) {
-                *unclosed = '\'';
-                return NULL;
-            }
-            s = close + 1;
+            next = close ? close + 1 : NULL;
+            *unclosed = '\'';
         } else if (*s == '"') {
-            s++;
-            while (*s && *s != '"') {
-                if (*s == '\\' && s[1])
-                    s++;
-                s++;
-            }
-            if (*s != '"') {
-                *unclosed = '"';
-                return NULL;
-            }
-            s++;
+            next = skip_dquote(s);
+            *unclosed = '"';
+        } else if (*s == '$' && s[1] == '(') {
+            next = skip_subst(s);
+            *unclosed = '(';
         } else {
-            s++;
+            next = s + 1;
         }
+        if (next == NULL)
+            return NULL;
+        s = next;
     }
     return s;
 }
@@ -113,10 +169,19 @@ int lex(const char *line, struct tokens *out)
     out->n = out->cap = 0;
 
     for (;;) {
-        while (*s == ' ' || *s == '\t' || *s == '\n')
+        while (*s == ' ' || *s == '\t')
             s++;
-        if (*s == '\0' || *s == '#')
+        if (*s == '#')              /* a comment runs to the end of the line */
+            s += strcspn(s, "\n");
+        if (*s == '\0')
             break;
+        if (*s == '\n') {
+            /* A new line separates commands like ';' does. */
+            if (push(out, T_NEWLINE, ";", 1) != 0)
+                goto oom;
+            s++;
+            continue;
+        }
 
         /*
          * We are at the start of a token, so "2>" here is the stderr
@@ -133,7 +198,10 @@ int lex(const char *line, struct tokens *out)
         char unclosed = 0;
         const char *end = word_end(s, &unclosed);
         if (end == NULL) {
-            ui_error(TRSH_NAME, MSG_UNCLOSED_QUOTE, unclosed);
+            if (unclosed == '(')
+                ui_error(TRSH_NAME, "%s", MSG_UNCLOSED_SUBST);
+            else
+                ui_error(TRSH_NAME, MSG_UNCLOSED_QUOTE, unclosed);
             tokens_free(out);
             return -1;
         }

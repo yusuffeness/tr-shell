@@ -13,5 +13,5 @@ gec: /yok: böyle bir dosya ya da dizin yok
 a
 tr-shell: sözdizimi hatası: beklenmeyen ';'
 tr-shell: sözdizimi hatası: beklenmeyen '&&'
-tr-shell: sözdizimi hatası: satır beklenmedik şekilde bitti
+tr-shell: sözdizimi hatası: komut tamamlanmadan girdi bitti ('son' ya da | && || sonrası eksik)
 [exit 2]

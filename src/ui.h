@@ -44,6 +44,9 @@ void ui_prompt(void);
 
 /* The second prompt line ("╰─❯ "); escape codes wrapped for readline if asked. */
 const char *ui_prompt_tail(int for_readline);
+
+/* "  ┆ ": the prompt for continuation lines of an eger / dongu / her block. */
+const char *ui_prompt_more(int for_readline);
 void ui_goodbye(void);
 
 /* Clears the screen and draws the banner again (`temizle`). */

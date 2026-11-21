@@ -38,7 +38,7 @@ TEST_HOME=/tmp/trsh-home
 
 run_trsh() {
     rm -rf "$TEST_HOME" && mkdir -p "$TEST_HOME"
-    env -u OLDPWD HOME="$TEST_HOME" LC_ALL=C NO_COLOR=1 timeout 10 "$TRSH"
+    env -u OLDPWD HOME="$TEST_HOME" LC_ALL=C NO_COLOR=1 TRSH="$TRSH" timeout 10 "$TRSH"
 }
 
 pass=0 fail=0 updated=0

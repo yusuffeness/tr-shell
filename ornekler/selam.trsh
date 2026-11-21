@@ -1,0 +1,14 @@
+#!/usr/bin/env trsh
+# Greets everyone given on the command line.
+#
+#   trsh ornekler/selam.trsh Ayşe Mehmet
+
+eger test $# -eq 0 ise
+    echo "kullanım: $0 İSİM..."
+    cikis 1
+son
+
+her kisi icin "$@" yap
+    echo "Merhaba $kisi!"
+son
+echo "Toplam $# kişi selamlandı, saat $(date +%H:%M)."

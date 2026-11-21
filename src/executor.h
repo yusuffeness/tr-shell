@@ -14,6 +14,9 @@
 /* Runs a whole parsed line. Returns the status of the last command. */
 int exec_script(const struct script *s);
 
+/* Runs eger / dongu / her in the current process. */
+int exec_compound(const struct command *c);
+
 /*
  * Runs one already-expanded command in the foreground: a builtin directly,
  * anything else in a child. Used by `zamanla` and by commands that call

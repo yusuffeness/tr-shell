@@ -1,0 +1,14 @@
+#!/usr/bin/env trsh
+# Counts the .c and .h files in each folder given (default: the current one).
+#
+#   trsh ornekler/sayac.trsh src tests
+
+# $(...) output is split into words, so this gives one word per folder.
+her klasor icin $(eger test $# -eq 0 ise echo .; degilse echo "$@"; son)
+yap
+    eger test ! -d $klasor ise
+        echo "$klasor: klasör değil, atlanıyor"
+        devam
+    son
+    echo "$klasor: $(ls $klasor | grep -c '\.[ch]$') C dosyası"
+son

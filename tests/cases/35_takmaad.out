@@ -15,8 +15,8 @@ zincir-bitti
 .
 a: komut bulunamadı
 selam
-selam: komut bulunamadı
-selam: komut bulunamadı
+selam: komut bulunamadı. Bunu mu demek istediniz: devam?
+selam: komut bulunamadı. Bunu mu demek istediniz: devam?
 MERHABA DüNYA
 rakamla başlayabilir
 takmaad: geçersiz takma ad: 'kötü' (harf, rakam, _ - . kullanılabilir)

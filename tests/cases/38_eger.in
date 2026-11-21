@@ -1,0 +1,22 @@
+eger true ise echo evet; son
+eger false ise echo evet; degilse echo hayir; son
+eger test -f tests/helpers/sample.txt ise echo dosya var; son
+eger test -d /yok/boyle ise echo var; degilse echo klasör yok; son
+eger false
+ise
+    echo olmaz
+degilse
+    eger true ise echo iç içe; son
+son
+eger false ise echo x; son
+echo "durum: $?"
+eger true ise false; son
+echo "durum: $?"
+eger true ise echo yönlendirme; son > /tmp/trsh-home/e.txt
+oku /tmp/trsh-home/e.txt
+eger true ise echo boru; son | tr a-z A-Z
+echo "son" ise yap
+eger "ise" ise echo tırnaklı; son
+son
+ise
+eger ise echo bos; son

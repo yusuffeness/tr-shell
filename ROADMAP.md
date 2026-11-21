@@ -11,8 +11,8 @@ The project is built in nine phases. Each phase ends with one commit and a versi
 | 5 | Custom commands | v0.5 | ✅ Done |
 | 6 | Shell features | v0.6 | ✅ Done |
 | 7 | Aliases and config | v0.7 | ✅ Done |
-| 8 | Scripting (optional) | v0.8 | ⏳ Next |
-| 9 | Release | v1.0 | |
+| 8 | Scripting | v0.8 | ✅ Done |
+| 9 | Release | v1.0 | ⏳ Next |
 
 ---
 
@@ -80,11 +80,14 @@ The project is built in nine phases. Each phase ends with one commit and a versi
 - [x] `ayar`: show, change (`ayar isim ...`), edit in `$EDITOR` (`ayar duzenle`), reset (`ayar sifirla`)
 - [x] The old `~/.trsh/theme` file from v0.3–v0.6 is still honored
 
-## Phase 8: Scripting (optional) → v0.8
+## Phase 8: Scripting → v0.8 ✅
 
-- [ ] Script mode (`trsh script.trsh`) and `kaynak` (source)
-- [ ] `eger` (if) and `dongu` (loop)
-- [ ] `$(...)` command substitution
+- [x] Script mode (`trsh script.trsh ARG...`), `trsh -c`, `#!/usr/bin/env trsh`, `--surum` / `--yardim`
+- [x] `kaynak` (source), with a nesting limit; startup file `~/.trsh/baslangic`
+- [x] `eger ... ise ... degilse ... son`, `dongu ... yap ... son`, `her X icin ... yap ... son`, `kir`, `devam`; blocks nest, may span lines, take redirections and run in pipelines or in the background
+- [x] `$(...)` command substitution, nested and quoted; unquoted output is split into words
+- [x] Script arguments `$0`–`$9`, `$#`, `$@` / `"$@"`; `cikis [CODE]`
+- [x] `#` comments; multi-line input with a `┆` continuation prompt, also after a trailing `|`, `&&` or `||`; Ctrl+C cancels an open block or stops a loop
 
 ## Phase 9: Release → v1.0
 

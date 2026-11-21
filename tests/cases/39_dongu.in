@@ -1,0 +1,16 @@
+degisken i=0
+dongu test $i -lt 3 yap echo "tur $i"; degisken i=$(expr $i + 1); son
+degisken i=0
+dongu true
+yap
+    degisken i=$(expr $i + 1)
+    eger test $i -eq 2 ise devam; son
+    eger test $i -gt 4 ise kir; son
+    echo "i=$i"
+son
+echo "çıktı: $i"
+dongu false yap echo hiç; son
+echo "durum: $?"
+kir
+devam
+kir fazla

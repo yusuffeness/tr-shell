@@ -1,0 +1,17 @@
+renk: kırmızı
+renk: yeşil
+renk: mavi
+dosya: tests/helpers/sample.txt
+eşleşmedi: tests/helpers/*.yok
+[a b]
+[c]
+1
+3
+a1
+a2
+b1
+b2
+durum: 0
+tr-shell: sözdizimi hatası: beklenmeyen '1x'
+tr-shell: sözdizimi hatası: beklenmeyen 'a'
+[exit 2]

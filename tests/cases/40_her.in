@@ -1,0 +1,17 @@
+her renk icin kırmızı yeşil mavi yap echo "renk: $renk"; son
+her f icin tests/helpers/*.txt yap echo "dosya: $f"; son
+her f icin tests/helpers/*.yok yap echo "eşleşmedi: $f"; son
+her x icin "a b" c
+yap
+    echo "[$x]"
+son
+her x icin 1 2 3 4 5 yap
+    eger test $x -eq 2 ise devam; son
+    eger test $x -eq 4 ise kir; son
+    echo $x
+son
+her i icin a b yap her j icin 1 2 yap echo $i$j; son; son
+her x icin yap echo bos; son
+echo "durum: $?"
+her 1x icin a yap echo; son
+her x a b yap echo; son

@@ -1,0 +1,12 @@
+tur 0
+tur 1
+tur 2
+i=1
+i=3
+i=4
+çıktı: 5
+durum: 0
+kir: yalnızca dongu ya da her içinde kullanılabilir
+devam: yalnızca dongu ya da her içinde kullanılabilir
+kir: çok fazla argüman
+[exit 1]

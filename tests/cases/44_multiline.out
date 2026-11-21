@@ -1,0 +1,8 @@
+COK SATIRLI | BORU
+a
+b
+bir kez
+# yorum değil
+tr-shell: sözdizimi hatası: beklenmeyen 'son'
+tr-shell: sözdizimi hatası: komut tamamlanmadan girdi bitti ('son' ya da | && || sonrası eksik)
+[exit 2]

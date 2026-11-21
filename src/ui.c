@@ -162,7 +162,7 @@ void ui_init(void)
      * When input comes from a file or a pipe (e.g. the test suite) the
      * shell runs non-interactively: no banner, prompt or screen changes.
      */
-    g_shell.interactive = isatty(STDIN_FILENO);
+    g_shell.interactive = !g_shell.script_mode && isatty(STDIN_FILENO);
     g_shell.use_color = isatty(STDOUT_FILENO) && getenv("NO_COLOR") == NULL;
 
     const char *term = getenv("TERM");
@@ -320,6 +320,21 @@ const char *ui_prompt_tail(int for_readline)
     } else {
         snprintf(buf, sizeof buf, "%s╰─❯%s ", theme_current()->accent, "\033[0m");
     }
+    return buf;
+}
+
+/* The prompt for the next line of an open eger / dongu / her block. */
+const char *ui_prompt_more(int for_readline)
+{
+    static char buf[128];
+
+    if (!g_shell.use_color || theme_current()->accent[0] == '\0')
+        snprintf(buf, sizeof buf, "  ┆ ");
+    else if (for_readline)
+        snprintf(buf, sizeof buf, "\001%s\002  ┆\001%s\002 ",
+                 theme_current()->accent, "\033[0m");
+    else
+        snprintf(buf, sizeof buf, "%s  ┆%s ", theme_current()->accent, "\033[0m");
     return buf;
 }
 

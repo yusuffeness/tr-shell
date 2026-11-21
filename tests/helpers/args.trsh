@@ -1,0 +1,11 @@
+#!/usr/bin/env trsh
+# Prints its own name and arguments, then exits with the argument count.
+echo "ad=$0 sayi=$#"
+her a icin "$@"
+yap
+    echo "arg: $a"
+son
+eger test $# -eq 0 ise
+    echo "argüman yok"
+son
+cikis $#

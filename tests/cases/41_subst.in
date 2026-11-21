@@ -1,0 +1,14 @@
+echo "bugün: $(echo pazartesi)"
+echo $(echo a    b     c)
+echo "$(echo a    b     c)"
+echo x$(echo 1 2)y
+echo $(echo dış $(echo iç))
+echo "$(printf 'satır1\nsatır2\n\n\n')"
+degisken N=$(echo 5 | tr 5 7)
+echo $N
+her k icin $(echo bir iki) yap echo "- $k"; son
+echo [$(true)]
+echo '$(echo tek tırnak)'
+echo $(echo $(echo $(echo derin)))
+echo $(echo kapanmamış
+echo $(sh -c 'exit 3') durum $?

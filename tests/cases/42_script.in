@@ -1,0 +1,16 @@
+$TRSH tests/helpers/args.trsh bir "iki üç" dört
+echo "çıkış kodu: $?"
+$TRSH tests/helpers/args.trsh
+echo "çıkış kodu: $?"
+$TRSH -c 'echo $0 $1 $# "$@"' ad x "y z"
+$TRSH -c 'echo "[$0]"'
+$TRSH -c 'false'
+echo "çıkış kodu: $?"
+$TRSH -c 'eger true ise'
+echo "çıkış kodu: $?"
+$TRSH -c
+echo "çıkış kodu: $?"
+$TRSH /yok/betik.trsh
+echo "çıkış kodu: $?"
+$TRSH --surum | tr -d 0-9.
+echo 'echo boruyla geldi' | $TRSH

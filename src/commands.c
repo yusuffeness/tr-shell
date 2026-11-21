@@ -24,6 +24,7 @@
 #include "jobs.h"
 #include "suggest.h"
 #include "notes.h"
+#include "run.h"
 #include "sysinfo.h"
 #include "trash.h"
 #include "messages.h"
@@ -143,12 +144,18 @@ static const struct command_entry table[] = {
             "temizle", "Ekranı temizler"),
     BUILTIN("hakkinda", bi_hakkinda, G_SHELL,
             "hakkinda", "Sürüm ve yazar bilgisi"),
+    BUILTIN("kaynak", bi_kaynak, G_SHELL,
+            "kaynak DOSYA", "Bir betik dosyasını bu kabukta çalıştırır"),
+    BUILTIN("kir", bi_kir, G_SHELL,
+            "kir", "Döngüden çıkar (dongu / her içinde)"),
+    BUILTIN("devam", bi_devam, G_SHELL,
+            "devam", "Döngünün sonraki turuna geçer"),
     BUILTIN("cikis", bi_exit, G_SHELL,
-            "cikis", "Kabuktan çıkar"),
+            "cikis [KOD]", "Kabuktan çıkar"),
     BUILTIN("cd", bi_cd, G_SHELL,
             "cd DİZİN", "Dizin değiştirir (gec'in klasik hâli)"),
     BUILTIN("exit", bi_exit, G_SHELL,
-            "exit", "Kabuktan çıkar (cikis ile aynı)"),
+            "exit [KOD]", "Kabuktan çıkar (cikis ile aynı)"),
 };
 
 #define TABLE_LEN (sizeof table / sizeof table[0])

@@ -128,12 +128,50 @@ int bi_nerdeyim(int argc, char **argv)
     return 0;
 }
 
+/* cikis [KOD]: without a code, the status of the last command. */
 int bi_exit(int argc, char **argv)
 {
-    (void)argc;
-    (void)argv;
+    int code = g_shell.last_status;
+
+    if (argc > 2) {
+        ui_error(argv[0], "%s", MSG_EXTRA_ARGS);
+        return 1;
+    }
+    if (argc == 2) {
+        char *end;
+        long v = strtol(argv[1], &end, 10);
+        if (*argv[1] == '\0' || *end != '\0') {
+            ui_error(argv[0], MSG_BAD_NUMBER, argv[1]);
+            return 1;
+        }
+        code = (int)(v & 0xff);
+    }
     g_shell.running = 0;
-    return g_shell.last_status;
+    return code;
+}
+
+static int loop_control(int argc, char **argv, int what)
+{
+    if (argc > 1) {
+        ui_error(argv[0], "%s", MSG_EXTRA_ARGS);
+        return 1;
+    }
+    if (g_shell.loop_depth == 0) {
+        ui_error(argv[0], "%s", MSG_NOT_IN_LOOP);
+        return 1;
+    }
+    g_shell.loop_ctl = what;
+    return 0;
+}
+
+int bi_kir(int argc, char **argv)
+{
+    return loop_control(argc, argv, LOOP_BREAK);
+}
+
+int bi_devam(int argc, char **argv)
+{
+    return loop_control(argc, argv, LOOP_CONTINUE);
 }
 
 int bi_tarih(int argc, char **argv)
