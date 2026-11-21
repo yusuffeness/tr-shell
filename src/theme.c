@@ -3,8 +3,6 @@
  */
 #define _POSIX_C_SOURCE 200809L
 
-#include <errno.h>
-#include <limits.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -12,12 +10,6 @@
 #include "config.h"
 #include "messages.h"
 #include "ui.h"
-
-#ifndef PATH_MAX
-#define PATH_MAX 4096
-#endif
-
-#define THEME_FILE  "theme"
 
 /* 256-color foregrounds; supported by Windows Terminal, iTerm2, GNOME, etc. */
 static const struct theme themes[] = {
@@ -45,47 +37,13 @@ static const struct theme *theme_find(const char *name)
     return NULL;
 }
 
-void theme_load(void)
+int theme_set(const char *name)
 {
-    char path[PATH_MAX];
-    char name[32];
+    const struct theme *t = theme_find(name);
 
-    if (!config_path(path, sizeof path, THEME_FILE))
-        return;
-
-    FILE *f = fopen(path, "r");
-    if (f == NULL)
-        return;
-    if (fgets(name, sizeof name, f) != NULL) {
-        name[strcspn(name, "\r\n")] = '\0';
-        const struct theme *t = theme_find(name);
-        if (t != NULL)
-            current = t;
-    }
-    fclose(f);
-}
-
-static int theme_save(const char *who)
-{
-    char path[PATH_MAX];
-
-    if (config_ensure_dir(who) != 0)
-        return 1;
-    if (!config_path(path, sizeof path, THEME_FILE)) {
-        ui_error(who, "%s", MSG_NO_HOME);
-        return 1;
-    }
-
-    FILE *f = fopen(path, "w");
-    if (f == NULL) {
-        ui_error(who, "%s: %s", path, msg_error(errno));
-        return 1;
-    }
-    fprintf(f, "%s\n", current->name);
-    if (fclose(f) != 0) {
-        ui_error(who, "%s: %s", path, msg_error(errno));
-        return 1;
-    }
+    if (t == NULL)
+        return -1;
+    current = t;
     return 0;
 }
 
@@ -118,7 +76,7 @@ int bi_tema(int argc, char **argv)
         return 1;
     }
     current = t;
-    if (theme_save(argv[0]) != 0)
+    if (config_save(argv[0]) != 0)
         return 1;
     printf(MSG_THEME_SET "\n", t->name);
     return 0;

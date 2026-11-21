@@ -1,7 +1,8 @@
 /*
  * history.h - command history.
  *
- * The last HISTORY_MAX lines are kept in memory, numbered from 1 (oldest).
+ * The last `gecmis_boyutu` lines (see config.h) are kept in memory,
+ * numbered from 1 (oldest).
  * In an interactive shell they are also appended to ~/.trsh/history and
  * loaded again on the next start; with readline they are reachable with
  * the arrow keys and Ctrl+R.
@@ -10,8 +11,6 @@
 #define TRSH_HISTORY_H
 
 #include <stddef.h>
-
-#define HISTORY_MAX 1000
 
 /* Loads the history file (interactive shells only). */
 void hist_init(void);

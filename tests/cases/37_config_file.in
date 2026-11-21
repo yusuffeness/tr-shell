@@ -1,0 +1,7 @@
+klasor /tmp/trsh-home/.trsh
+printf '# yorum\n\ntema = mor\nisim=  Boşluklu İsim  \nkarsilama = kapali\nyanlis satir\nbilinmeyen = 1\ntema = pembe\ngecmis_boyutu = 0\n[baska]\n[takmaad]\nmerhaba = echo merhaba dosyadan\nkötü ad = x\n' > /tmp/trsh-home/.trsh/config
+printf 'ayar\ntakmaad\nmerhaba\n' | ./trsh
+echo eski tema dosyasi:
+sil -e /tmp/trsh-home/.trsh/config
+echo turuncu > /tmp/trsh-home/.trsh/theme
+printf 'tema\n' | ./trsh | grep "●"

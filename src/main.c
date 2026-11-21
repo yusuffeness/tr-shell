@@ -16,6 +16,8 @@
 #include "lexer.h"
 #include "parser.h"
 #include "executor.h"
+#include "alias.h"
+#include "config.h"
 #include "history.h"
 #include "jobs.h"
 #include "signals.h"
@@ -51,6 +53,11 @@ static void run_line(const char *line)
     struct timespec start, end;
 
     if (lex(line, &tokens) != 0) {
+        finish(EXIT_SYNTAX, 0);
+        return;
+    }
+    if (alias_expand(&tokens) != 0) {
+        tokens_free(&tokens);
         finish(EXIT_SYNTAX, 0);
         return;
     }
@@ -95,6 +102,7 @@ int main(void)
     static char line[MAX_LINE];
 
     ui_init();
+    config_load();
     signals_init();
     jobs_init();
     input_init();

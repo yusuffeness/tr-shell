@@ -1,0 +1,47 @@
+isim = <varsayılan>
+tema = yesil
+karsilama = sade
+gecmis_boyutu = 50
+  tema           yesil
+  isim           <varsayılan>
+  karsilama      sade
+  gecmis_boyutu  50
+  takma adlar    0
+
+Ayar dosyası: AYAR  ('ayar duzenle' ile açabilirsiniz)
+  ○ mavi     Mavi (varsayılan)
+  ● yesil    Yeşil
+  ○ mor      Mor
+  ○ turuncu  Turuncu
+  ○ sade     Sade (vurgu rengi yok)
+ayar: tema: geçersiz tema (mavi, yesil, mor, turuncu, sade)
+ayar: gecmis_boyutu: 10 ile 100000 arasında bir sayı olmalı
+ayar: gecmis_boyutu: 10 ile 100000 arasında bir sayı olmalı
+ayar: karsilama: acik, sade ya da kapali olmalı
+ayar: bilinmeyen: bilinmeyen ayar
+Deneme Kullanıcı
+ayar: olmayan_anahtar: bilinmeyen ayar
+  tema           yesil
+  isim           <varsayılan>
+  karsilama      sade
+  gecmis_boyutu  50
+  takma adlar    0
+
+Ayar dosyası: AYAR  ('ayar duzenle' ile açabilirsiniz)
+Bütün ayarlar ve takma adlar varsayılana dönsün mü? [e/H] 
+Vazgeçildi.
+Bütün ayarlar ve takma adlar varsayılana dönsün mü? [e/H] 
+Ayarlar varsayılana döndü.
+mavi
+acik
+
+tema = mavi
+
+isim = <varsayılan>
+
+karsilama = acik
+
+gecmis_boyutu = 1000
+
+[takmaad]
+[exit 0]

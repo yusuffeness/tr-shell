@@ -1,0 +1,19 @@
+tr-shell: /tmp/trsh-home/.trsh/config, satır 6: 'ad = değer' biçiminde olmalı: yanlis satir
+tr-shell: /tmp/trsh-home/.trsh/config, satır 7: bilinmeyen ayar: bilinmeyen
+tr-shell: /tmp/trsh-home/.trsh/config, satır 8: geçersiz tema (mavi, yesil, mor, turuncu, sade): tema
+tr-shell: /tmp/trsh-home/.trsh/config, satır 9: 10 ile 100000 arasında bir sayı olmalı: gecmis_boyutu
+tr-shell: /tmp/trsh-home/.trsh/config, satır 10: bilinmeyen bölüm: [baska]
+tr-shell: /tmp/trsh-home/.trsh/config, satır 13: geçersiz takma ad: kötü ad
+  tema           mor
+  isim           Boşluklu İsim
+  karsilama      kapali
+  gecmis_boyutu  1000
+  takma adlar    1
+
+Ayar dosyası: AYAR  ('ayar duzenle' ile açabilirsiniz)
+  merhaba = echo merhaba dosyadan
+merhaba dosyadan
+eski tema dosyasi:
+Çöp kutusuna taşındı: CONFIG
+  ● turuncu  Turuncu
+[exit 0]

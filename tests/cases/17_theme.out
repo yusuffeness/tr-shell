@@ -9,7 +9,7 @@ Tema: mor
   ● mor      Mor
   ○ turuncu  Turuncu
   ○ sade     Sade (vurgu rengi yok)
-mor
+tema = mor
 tema: böyle bir tema yok: olmayan ('tema' ile listeleyin)
 tema: çok fazla argüman
 [exit 0]

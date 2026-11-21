@@ -1,0 +1,46 @@
+Henüz takma ad yok. Örnek: takmaad ll=listele -d
+bu-takmaad-degil
+  ll = listele -a
+  selam = echo merhaba dünya
+  zincir = selam && echo zincir-bitti
+  yanlis = echo bir
+  say = printf "%s\n" bir iki | wc -l
+  selam = echo merhaba dünya
+merhaba dünya
+merhaba dünya ve fazlası
+merhaba dünya
+zincir-bitti
+2
+.trsh/
+.
+a: komut bulunamadı
+selam
+selam: komut bulunamadı
+selam: komut bulunamadı
+MERHABA DüNYA
+rakamla başlayabilir
+takmaad: geçersiz takma ad: 'kötü' (harf, rakam, _ - . kullanılabilir)
+takmaad: 'bos' için komut yazılmadı (örnek: takmaad ll=listele -d)
+takmaad: geçersiz takma ad: 'takmaad' (harf, rakam, _ - . kullanılabilir)
+takmaad: böyle bir takma ad yok: olmayan
+takmaadsil: böyle bir takma ad yok: olmayan
+takmaadsil: Kullanım: takmaadsil AD...
+  selam = echo merhaba dünya
+  zincir = selam && echo zincir-bitti
+  yanlis = echo bir
+  say = printf "%s\n" bir iki | wc -l
+  ls = ls -d
+  a = b
+  b = a
+  1-iyi = echo rakamla başlayabilir
+[takmaad]
+# Kendi komutlarınız: ad = komut
+selam = echo merhaba dünya
+zincir = selam && echo zincir-bitti
+yanlis = echo bir
+say = printf "%s\n" bir iki | wc -l
+ls = ls -d
+a = b
+b = a
+1-iyi = echo rakamla başlayabilir
+[exit 0]

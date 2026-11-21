@@ -14,7 +14,9 @@
 #include <time.h>
 
 #include "commands.h"
+#include "alias.h"
 #include "builtins.h"
+#include "config.h"
 #include "executor.h"
 #include "calc.h"
 #include "files.h"
@@ -127,6 +129,12 @@ static const struct command_entry table[] = {
             "arka [NO]", "Durdurulmuş işi arka planda sürdürür"),
     BUILTIN("degisken", bi_degisken, G_SHELL,
             "degisken [AD=DEĞER... | sil AD]", "Ortam değişkenlerini listeler, atar ya da siler"),
+    BUILTIN("takmaad", bi_takmaad, G_SHELL,
+            "takmaad [AD=KOMUT]", "Kendi komutunu tanımlar ya da takma adları listeler"),
+    BUILTIN("takmaadsil", bi_takmaadsil, G_SHELL,
+            "takmaadsil AD...", "Takma adı siler"),
+    BUILTIN("ayar", bi_ayar, G_SHELL,
+            "ayar [ANAHTAR DEĞER | duzenle | sifirla]", "Ayarları gösterir ya da değiştirir"),
     BUILTIN("gecmis", bi_gecmis, G_SHELL,
             "gecmis [N]", "Önceki komutları listeler; !N ile tekrar çalıştırılır"),
     BUILTIN("tema", bi_tema, G_SHELL,

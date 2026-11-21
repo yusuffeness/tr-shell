@@ -1,7 +1,7 @@
 tema
 tema mor
 tema
-oku /tmp/trsh-home/.trsh/theme
+grep "^tema" /tmp/trsh-home/.trsh/config
 tema olmayan
 tema a b
 temizle

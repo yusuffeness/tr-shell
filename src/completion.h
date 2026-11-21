@@ -1,7 +1,7 @@
 /*
  * completion.h - Tab completion (readline builds only).
  *
- * The first word completes to tr-shell commands and programs in PATH;
+ * The first word completes to tr-shell commands, aliases and programs in PATH;
  * later words complete to file names.
  */
 #ifndef TRSH_COMPLETION_H

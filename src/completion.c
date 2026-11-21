@@ -18,6 +18,7 @@
 #include <readline/readline.h>
 
 #include "commands.h"
+#include "config.h"
 
 #ifndef PATH_MAX
 #define PATH_MAX 4096
@@ -86,13 +87,19 @@ static void build_names(void)
 
 static char *command_generator(const char *text, int state)
 {
-    static size_t next, len;
+    static size_t next, next_alias, len;
 
     if (state == 0) {
         if (names == NULL)
             build_names();
-        next = 0;
+        next = next_alias = 0;
         len = strlen(text);
+    }
+    /* Aliases first; they can change while the shell runs, so not cached. */
+    while (next_alias < g_settings.alias_names.n) {
+        const char *name = g_settings.alias_names.v[next_alias++];
+        if (strncmp(name, text, len) == 0)
+            return strdup(name);
     }
     while (next < names_len) {
         const char *name = names[next++];

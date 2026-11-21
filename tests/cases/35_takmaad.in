@@ -1,0 +1,33 @@
+takmaad
+takmaad ll=listele -a
+takmaad selam='echo merhaba dünya'
+takmaad zincir='selam && echo zincir-bitti'
+takmaad yanlis=echo bir && echo bu-takmaad-degil
+takmaad say='printf "%s\n" bir iki | wc -l'
+takmaad
+takmaad selam
+selam
+selam ve fazlası
+zincir
+say
+gec /tmp/trsh-home
+ll
+takmaad ls=ls -d
+ls .
+takmaad a=b
+takmaad b=a
+a
+echo selam
+"selam"
+x=1 selam
+selam | tr a-z A-Z
+takmaad 1-iyi=echo rakamla başlayabilir
+1-iyi
+takmaad kötü=x
+takmaad bos=
+takmaad takmaad=x
+takmaad olmayan
+takmaadsil ll olmayan
+takmaadsil
+takmaad
+grep -A20 "takmaad]" /tmp/trsh-home/.trsh/config

@@ -26,20 +26,33 @@
 
 #define HISTORY_FILE "history"
 
-static char *entries[HISTORY_MAX];
+static char **entries;  /* capacity entries, set from the config */
+static int capacity;
 static int count;
 static int persist;     /* append new lines to the history file */
+
+/* Allocates the list once; the size comes from `gecmis_boyutu`. */
+static int ensure_list(void)
+{
+    if (entries != NULL)
+        return 0;
+    capacity = g_settings.history_size > 0 ? g_settings.history_size : 1000;
+    entries = calloc((size_t)capacity, sizeof *entries);
+    return entries ? 0 : -1;
+}
 
 /* Adds a line to memory (and to readline), dropping the oldest if full. */
 static void push(const char *line)
 {
     char *copy = strdup(line);
 
-    if (copy == NULL)
+    if (copy == NULL || ensure_list() != 0) {
+        free(copy);
         return;
-    if (count == HISTORY_MAX) {
+    }
+    if (count == capacity) {
         free(entries[0]);
-        memmove(entries, entries + 1, (HISTORY_MAX - 1) * sizeof entries[0]);
+        memmove(entries, entries + 1, (size_t)(capacity - 1) * sizeof entries[0]);
         count--;
     }
     entries[count++] = copy;
@@ -66,11 +79,11 @@ void hist_init(void)
     char line[MAX_LINE];
     int lines = 0;
 
-    if (!g_shell.interactive)
+    if (ensure_list() != 0 || !g_shell.interactive)
         return;
     persist = 1;
 #ifdef HAVE_READLINE
-    stifle_history(HISTORY_MAX);
+    stifle_history(capacity);
 #endif
     if (!config_path(path, sizeof path, HISTORY_FILE))
         return;
@@ -87,7 +100,7 @@ void hist_init(void)
     }
     fclose(f);
 
-    if (lines > 2 * HISTORY_MAX)
+    if (lines > 2 * capacity)
         rewrite_file(path);
 }
 

@@ -1,0 +1,21 @@
+ayar isim Deneme Kullanıcı
+ayar tema yesil
+ayar karsilama sade
+ayar gecmis_boyutu 50
+ayar
+tema
+ayar tema olmayan
+ayar gecmis_boyutu abc
+ayar gecmis_boyutu 5
+ayar karsilama belki
+ayar bilinmeyen x
+ayar isim
+ayar olmayan_anahtar
+ayar
+ayar sifirla
+h
+ayar sifirla
+e
+ayar tema
+ayar karsilama
+grep -v "^#" /tmp/trsh-home/.trsh/config

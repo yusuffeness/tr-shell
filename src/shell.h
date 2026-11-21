@@ -5,8 +5,8 @@
 #define TRSH_SHELL_H
 
 #define TRSH_NAME    "tr-shell"
-#define TRSH_VERSION "0.6.0"
-#define TRSH_USER    "Yusuf Enes Kütük"
+#define TRSH_VERSION "0.7.0"
+#define TRSH_AUTHOR  "Yusuf Enes Kütük"
 #define TRSH_URL     "https://github.com/yusuffeness/tr-shell"
 
 #define MAX_LINE 4096   /* max bytes in one input line (including \n and \0) */

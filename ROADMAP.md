@@ -10,8 +10,8 @@ The project is built in nine phases. Each phase ends with one commit and a versi
 | 4 | Usability | v0.4 | ✅ Done |
 | 5 | Custom commands | v0.5 | ✅ Done |
 | 6 | Shell features | v0.6 | ✅ Done |
-| 7 | Aliases and config | v0.7 | ⏳ Next |
-| 8 | Scripting (optional) | v0.8 | |
+| 7 | Aliases and config | v0.7 | ✅ Done |
+| 8 | Scripting (optional) | v0.8 | ⏳ Next |
 | 9 | Release | v1.0 | |
 
 ---
@@ -72,10 +72,13 @@ The project is built in nine phases. Each phase ends with one commit and a versi
 - [x] File name patterns: `*`, `?`, `[...]`
 - [x] Job control: `&`, Ctrl+Z, `isler`, `on`, `arka`; each job in its own process group, terminal handed over with `tcsetpgrp`, terminal settings kept per job
 
-## Phase 7: Aliases and config → v0.7
+## Phase 7: Aliases and config → v0.7 ✅
 
-- [ ] `takmaad` and `takmaadsil` (user-defined aliases)
-- [ ] Config file (`~/.trsh/config`)
+- [x] `takmaad` / `takmaadsil`: user-defined commands, expanded in command position (also after `|`, `&&`, `;`), may contain pipes and `&&`, protected against self-reference loops, completed with Tab
+- [x] Config file `~/.trsh/config`: theme, name in the prompt, welcome screen (`acik` / `sade` / `kapali`), history size, aliases
+- [x] Bad lines are reported with their line number and skipped; the shell always starts
+- [x] `ayar`: show, change (`ayar isim ...`), edit in `$EDITOR` (`ayar duzenle`), reset (`ayar sifirla`)
+- [x] The old `~/.trsh/theme` file from v0.3–v0.6 is still honored
 
 ## Phase 8: Scripting (optional) → v0.8
 

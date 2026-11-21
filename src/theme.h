@@ -3,7 +3,7 @@
  *
  * A theme only decides the accent colors (box, logo, prompt frame,
  * directory, git branch). Success / error colors stay green / red.
- * The chosen theme is saved in ~/.trsh/theme.
+ * The chosen theme is saved in the config file (~/.trsh/config).
  */
 #ifndef TRSH_THEME_H
 #define TRSH_THEME_H
@@ -18,8 +18,8 @@ struct theme {
 /* The active theme (never NULL). */
 const struct theme *theme_current(void);
 
-/* Loads the saved theme, if any. Unknown or missing values keep the default. */
-void theme_load(void);
+/* Switches to the named theme. Returns 0, or -1 if there is no such theme. */
+int theme_set(const char *name);
 
 /* `tema` builtin: lists themes, or switches to and saves the named one. */
 int bi_tema(int argc, char **argv);

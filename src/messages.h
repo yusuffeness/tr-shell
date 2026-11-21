@@ -89,6 +89,34 @@
 #define MSG_NO_SUCH_JOB     "böyle bir iş yok: %s"
 #define MSG_JOB_NOT_STOPPED "%d numaralı iş zaten çalışıyor"
 
+#define MSG_ALIAS_NONE      "Henüz takma ad yok. Örnek: takmaad ll=listele -d"
+#define MSG_ALIAS_NO_SUCH   "böyle bir takma ad yok: %s"
+#define MSG_ALIAS_BAD_NAME  "geçersiz takma ad: '%s' (harf, rakam, _ - . kullanılabilir)"
+#define MSG_ALIAS_EMPTY     "'%s' için komut yazılmadı (örnek: takmaad ll=listele -d)"
+
+#define MSG_CFG_LINE        "%s, satır %d: %s: %s"
+#define MSG_CFG_UNKNOWN_KEY "bilinmeyen ayar"
+#define MSG_CFG_UNKNOWN_SECTION "bilinmeyen bölüm"
+#define MSG_CFG_NO_EQUALS   "'ad = değer' biçiminde olmalı"
+#define MSG_CFG_BAD_ALIAS   "geçersiz takma ad"
+#define MSG_CFG_BAD_THEME   "geçersiz tema (mavi, yesil, mor, turuncu, sade)"
+#define MSG_CFG_BAD_NAME    "isim boş ya da çok uzun"
+#define MSG_CFG_BAD_BANNER  "acik, sade ya da kapali olmalı"
+#define MSG_CFG_BAD_HISTORY "10 ile 100000 arasında bir sayı olmalı"
+#define MSG_CFG_SET         "%s = %s"
+#define MSG_CFG_RESET_DONE  "Ayarlar varsayılana döndü."
+#define MSG_CFG_FILE_IS     "Ayar dosyası: %s  ('ayar duzenle' ile açabilirsiniz)"
+#define MSG_CFG_ASK_RESET   "Bütün ayarlar ve takma adlar varsayılana dönsün mü? [e/H] "
+#define MSG_CFG_HEADER \
+    "# tr-shell ayar dosyası\n" \
+    "# Elle düzenleyebilir ya da 'ayar' ve 'takmaad' komutlarını kullanabilirsiniz.\n" \
+    "# Bu komutlar dosyayı yeniden yazar; buraya eklenen yorumlar korunmaz.\n"
+#define MSG_CFG_DOC_THEME   "# Renk teması: mavi, yesil, mor, turuncu, sade"
+#define MSG_CFG_DOC_NAME    "# İstemde görünen ad"
+#define MSG_CFG_DOC_BANNER  "# Açılış ekranı: acik (logolu kutu), sade (tek satır), kapali"
+#define MSG_CFG_DOC_HISTORY "# Saklanacak en fazla komut sayısı (10 - 100000)"
+#define MSG_CFG_DOC_ALIAS   "# Kendi komutlarınız: ad = komut"
+
 #define MSG_TIME_REAL       "gerçek"
 #define MSG_TIME_USER       "kullanıcı"
 #define MSG_TIME_SYS        "sistem"

@@ -16,6 +16,7 @@
 #include "ui.h"
 #include "git.h"
 #include "util.h"
+#include "config.h"
 #include "messages.h"
 
 #ifndef PATH_MAX
@@ -163,7 +164,6 @@ void ui_init(void)
      */
     g_shell.interactive = isatty(STDIN_FILENO);
     g_shell.use_color = isatty(STDOUT_FILENO) && getenv("NO_COLOR") == NULL;
-    theme_load();
 
     const char *term = getenv("TERM");
     int dumb = term != NULL && strcmp(term, "dumb") == 0;
@@ -243,7 +243,7 @@ static void banner_full(void)
         cwd = text_tail(cwd, INFO_WIDTH);
 
     info[1] = TRSH_NAME " " TRSH_VERSION;  style[1] = BOLD;
-    info[2] = TRSH_USER;                   style[2] = "";
+    info[2] = g_settings.name;             style[2] = "";
     info[4] = cwd;                         style[4] = ACCENT2;
     info[5] = date;                        style[5] = GRAY;
 
@@ -276,13 +276,15 @@ static void banner_full(void)
 /* For narrow terminals: no box, no logo. */
 static void banner_compact(void)
 {
-    printf("%s%s%s %s · %s\n", BOLD, TRSH_NAME, RESET, TRSH_VERSION, TRSH_USER);
+    printf("%s%s%s %s · %s\n", BOLD, TRSH_NAME, RESET, TRSH_VERSION, g_settings.name);
     printf("%s%s%s\n\n", GRAY, MSG_BANNER_HINT, RESET);
 }
 
 void ui_banner(void)
 {
-    if (ui_term_cols() >= BOX_INNER + 2)
+    if (g_settings.banner == BANNER_OFF)
+        return;
+    if (g_settings.banner == BANNER_FULL && ui_term_cols() >= BOX_INNER + 2)
         banner_full();
     else
         banner_compact();
@@ -340,7 +342,7 @@ void ui_prompt(void)
     first = 0;
 
     printf("%s╭─%s %s%s%s %s·%s %s%s%s",
-           ACCENT, RESET, BOLD, TRSH_USER, RESET,
+           ACCENT, RESET, BOLD, g_settings.name, RESET,
            GRAY, RESET, ACCENT, shown_cwd(), RESET);
     if (branch != NULL)
         printf(" %s·%s %s⎇ %s%s", GRAY, RESET, ACCENT2, branch, RESET);

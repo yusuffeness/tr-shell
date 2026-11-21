@@ -7,13 +7,13 @@ complete, everyday-usable shell. It is a hands-on project around the classic pro
 APIs: `fork`, `execvp`, `waitpid`, `pipe`, `dup2`, signals, process groups and
 `tcsetpgrp`.
 
-> **Status:** v0.6 — shell features. See [ROADMAP.md](ROADMAP.md) for what comes next.
+> **Status:** v0.7 — aliases and config. See [ROADMAP.md](ROADMAP.md) for what comes next.
 
 ```text
 ╭────────────────────────────────────────────────────────────────╮
 │                                                                │
 │   ████████╗██████╗ ███████╗██╗  ██╗                            │
-│   ╚══██╔══╝██╔══██╗██╔════╝██║  ██║   tr-shell 0.6.0           │
+│   ╚══██╔══╝██╔══██╗██╔════╝██║  ██║   tr-shell 0.7.0           │
 │      ██║   ██████╔╝███████╗███████║   Yusuf Enes Kütük         │
 │      ██║   ██╔══██╗╚════██║██╔══██║                            │
 │      ██║   ██║  ██║███████║██║  ██║   ~/projects/tr-shell      │
@@ -47,6 +47,9 @@ listel: komut bulunamadı. Bunu mu demek istediniz: listele?
 - **Two-line prompt** with directory, git branch and time; ✓ or ✗ with the exit code
   after each command, and the duration of commands that take a second or more
 - **Themes:** `tema mor` switches the accent color and remembers it
+- **Your own commands:** `takmaad ll=listele -d`, kept between sessions
+- **A config file** for the theme, the name in the prompt, the welcome screen and
+  history size — see [Configuration](#configuration)
 - **Line editing** with readline: history on the arrow keys and Ctrl+R, kept between
   sessions; Tab completes commands and file names; `gecmis`, `!!`, `!N`
 - **Ctrl+C** drops the line you are typing or stops the running command — never the
@@ -95,6 +98,9 @@ listel: komut bulunamadı. Bunu mu demek istediniz: listele?
 | | `notlar [sil N]` | List notes or delete one | builtin |
 | Shell | `yardim [CMD]` | Help | builtin |
 | | `gecmis [N]` | Command history; rerun with `!N`, `!!` or `!PREFIX` | builtin |
+| | `takmaad [NAME=COMMAND]` | Define your own command, or list them | builtin |
+| | `takmaadsil NAME...` | Remove an alias | builtin |
+| | `ayar [KEY VALUE \| duzenle \| sifirla]` | Show or change settings | builtin |
 | | `isler` | List background and stopped jobs | builtin |
 | | `on [N]` | Bring a job to the foreground (`fg`) | builtin |
 | | `arka [N]` | Continue a stopped job in the background (`bg`) | builtin |
@@ -128,6 +134,33 @@ foreground job, never the shell.
 
 Not supported (yet): `$(...)`, here-documents, `if` / loops (see the roadmap) and word
 splitting of unquoted variables.
+
+## Configuration
+
+Settings and aliases live in `~/.trsh/config`. You can edit it by hand (`ayar duzenle`
+opens it in `$EDITOR`) or change it from the shell:
+
+```bash
+ayar isim Yusuf Enes Kütük      # name shown in the prompt (default: your account name)
+ayar tema mor                   # mavi, yesil, mor, turuncu, sade
+ayar karsilama sade             # welcome screen: acik, sade, kapali
+ayar gecmis_boyutu 5000         # history lines to keep
+takmaad ll=listele -d           # your own command
+takmaad guncelle='git pull && make'
+```
+
+```ini
+tema = mor
+isim = Yusuf Enes Kütük
+karsilama = acik
+gecmis_boyutu = 1000
+
+[takmaad]
+ll = listele -d
+guncelle = git pull && make
+```
+
+A line the shell cannot understand is reported with its line number and skipped.
 
 ## Requirements
 
@@ -175,7 +208,8 @@ src/
   completion.c  Tab completion
   signals.c     Ctrl+C, Ctrl+\ and Ctrl+Z handling
   suggest.c     "did you mean" suggestions
-  config.c      paths under ~/.trsh
+  config.c      ~/.trsh/config: settings, aliases, `ayar`
+  alias.c       takmaad / takmaadsil and alias expansion
   files.c       listele and agac
   sysinfo.c     sistem
   trash.c       sil and copkutusu

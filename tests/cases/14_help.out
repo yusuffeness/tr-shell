@@ -41,6 +41,9 @@ Kabuk
   on         İşi ön plana alır (Ctrl+Z ile durdurulanı da)
   arka       Durdurulmuş işi arka planda sürdürür
   degisken   Ortam değişkenlerini listeler, atar ya da siler
+  takmaad    Kendi komutunu tanımlar ya da takma adları listeler
+  takmaadsil Takma adı siler
+  ayar       Ayarları gösterir ya da değiştirir
   gecmis     Önceki komutları listeler; !N ile tekrar çalıştırılır
   tema       Temaları listeler ya da temayı değiştirir
   temizle    Ekranı temizler
