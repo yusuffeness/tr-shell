@@ -1,0 +1,16 @@
+name: Feature request
+description: Suggest a command or a shell feature
+labels: [enhancement]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like?
+      description: Describe the command or behaviour, with an example of how you would use it.
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why?
+      description: The problem it solves, and how you handle it today.

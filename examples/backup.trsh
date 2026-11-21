@@ -1,0 +1,25 @@
+#!/usr/bin/env trsh
+# Copies the given files into a dated folder under ./yedek and reports
+# what happened to each one.
+#
+#   trsh examples/backup.trsh notes.txt src/main.c
+
+eger test $# -eq 0 ise
+    echo "kullanım: $0 DOSYA..."
+    cikis 2
+son
+
+hedef=yedek/$(date +%Y-%m-%d)
+klasor $hedef
+
+kopyalanan=0
+her dosya icin "$@" yap
+    eger test -f "$dosya" ise
+        kopyala "$dosya" $hedef/ && echo "  + $dosya"
+        degisken kopyalanan=$(expr $kopyalanan + 1)
+    degilse
+        echo "  - $dosya bulunamadı, atlandı"
+    son
+son
+
+echo "$kopyalanan dosya $hedef klasörüne yedeklendi."

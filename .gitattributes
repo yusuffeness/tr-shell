@@ -1,2 +1,6 @@
-# Windows'ta düzenlense bile satır sonları LF kalsın; testler bayt bayt karşılaştırılıyor.
+# Keep LF line endings even when files are edited on Windows:
+# the tests compare output byte for byte.
 * text=auto eol=lf
+
+# Rendered terminal screenshots are generated files.
+docs/images/*.svg linguist-generated

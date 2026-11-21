@@ -1,6 +1,7 @@
 # tr-shell Roadmap
 
-The project is built in nine phases. Each phase ends with one commit and a version tag.
+tr-shell was built in nine phases, each ending with one commit and a version tag.
+The detailed release notes are in [CHANGELOG.md](CHANGELOG.md).
 
 | Phase | Topic | Version | Status |
 | --- | --- | --- | --- |
@@ -12,7 +13,7 @@ The project is built in nine phases. Each phase ends with one commit and a versi
 | 6 | Shell features | v0.6 | ✅ Done |
 | 7 | Aliases and config | v0.7 | ✅ Done |
 | 8 | Scripting | v0.8 | ✅ Done |
-| 9 | Release | v1.0 | ⏳ Next |
+| 9 | Release | v1.0 | ✅ Done |
 
 ---
 
@@ -89,7 +90,23 @@ The project is built in nine phases. Each phase ends with one commit and a versi
 - [x] Script arguments `$0`–`$9`, `$#`, `$@` / `"$@"`; `cikis [CODE]`
 - [x] `#` comments; multi-line input with a `┆` continuation prompt, also after a trailing `|`, `&&` or `||`; Ctrl+C cancels an open block or stops a loop
 
-## Phase 9: Release → v1.0
+## Phase 9: Release → v1.0 ✅
 
-- [ ] Complete test suite and GitHub Actions
-- [ ] Final README with screenshots, v1.0
+- [x] GitHub Actions: gcc and clang, with and without readline, sanitizer run, install check
+- [x] Release workflow publishing a tested Linux binary with a checksum for every tag
+- [x] Man page, installed by `make install`
+- [x] Final README with screenshots, CHANGELOG, CONTRIBUTING, architecture notes
+- [x] Issue and pull request templates; example scripts in `examples/`
+
+---
+
+## After 1.0
+
+Ideas under consideration. Suggestions are welcome as issues.
+
+- [ ] Functions: `islev AD ... son`
+- [ ] Here-documents (`<<`) and `>&2`
+- [ ] Arithmetic expansion without `expr`
+- [ ] Word splitting of unquoted variables, behind an option
+- [ ] macOS support in CI
+- [ ] Debian package and a Homebrew formula

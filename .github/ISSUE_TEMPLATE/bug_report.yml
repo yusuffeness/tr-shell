@@ -1,0 +1,36 @@
+name: Bug report
+description: Something in tr-shell does not work as expected
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What you typed, what you expected and what you got instead.
+      placeholder: |
+        Typed:    her x icin a b yap echo $x; son
+        Expected: a, b on separate lines
+        Got:      ...
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: The smallest input that shows the problem. A `trsh -c '...'` line is ideal.
+      render: text
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Output of `trsh --surum` and the "Line editing" line of `hakkinda`.
+      placeholder: tr-shell 1.0.0, readline
+    validations:
+      required: true
+  - type: input
+    id: system
+    attributes:
+      label: System
+      placeholder: Ubuntu 24.04 on WSL 2, Windows Terminal
+    validations:
+      required: true

@@ -1,0 +1,127 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="861" height="463" viewBox="0 0 861 463" role="img" aria-label="trsh — scripting">
+<style>.b{font-weight:700}.i{font-style:italic}</style>
+<g font-family="'Cascadia Mono', 'SF Mono', Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="14.2">
+<rect width="861" height="463" rx="10" fill="#1e1e2e"/>
+<rect width="861" height="34" rx="10" fill="#181825"/><rect y="24" width="861" height="10" fill="#181825"/>
+<circle cx="20" cy="17.0" r="6" fill="#f38ba8"/>
+<circle cx="40" cy="17.0" r="6" fill="#f9e2af"/>
+<circle cx="60" cy="17.0" r="6" fill="#a6e3a1"/>
+<text x="430.5" y="22.0" text-anchor="middle" fill="#9399b2" font-size="13">trsh — scripting</text>
+<path d="M22.30 67.00V61.80Q22.30 57.50 26.60 57.50H26.60" stroke="#00afff" stroke-width="1.3" fill="none"/>
+<path d="M26.60 57.50L35.20 57.50" stroke="#00afff" stroke-width="1.3" fill="none" stroke-linecap="square"/>
+<text x="43.8 52.4 61.0 69.6 78.2" y="62.2" fill="#cdd6f4" class="b">Yusuf</text>
+<text x="95.4 104.0 112.6 121.2" y="62.2" fill="#cdd6f4" class="b">Enes</text>
+<text x="138.4 147.0 155.6 164.2 172.8" y="62.2" fill="#cdd6f4" class="b">Kütük</text>
+<text x="190.0" y="62.2" fill="#585b70">·</text>
+<text x="207.2 215.8 224.4 233.0 241.6 250.2 258.8 267.4 276.0 284.6 293.2 301.8 310.4 319.0 327.6 336.2 344.8 353.4 362.0" y="62.2" fill="#00afff">~/projects/tr-shell</text>
+<text x="379.2" y="62.2" fill="#585b70">·</text>
+<text x="396.4" y="62.2" fill="#87afff">⎇</text>
+<text x="413.6 422.2 430.8 439.4" y="62.2" fill="#87afff">main</text>
+<text x="456.6" y="62.2" fill="#585b70">·</text>
+<text x="473.8 482.4 491.0 499.6 508.2" y="62.2" fill="#585b70">13:50</text>
+<path d="M22.30 67.00V72.20Q22.30 76.50 26.60 76.50H26.60" stroke="#00afff" stroke-width="1.3" fill="none"/>
+<path d="M26.60 76.50L35.20 76.50" stroke="#00afff" stroke-width="1.3" fill="none" stroke-linecap="square"/>
+<text x="35.2" y="81.2" fill="#00afff">❯</text>
+<text x="52.4 61.0 69.6" y="81.2" fill="#cdd6f4">her</text>
+<text x="86.8 95.4 104.0 112.6 121.2" y="81.2" fill="#cdd6f4">dosya</text>
+<text x="138.4 147.0 155.6 164.2" y="81.2" fill="#cdd6f4">icin</text>
+<text x="181.4 190.0 198.6 207.2 215.8 224.4 233.0 241.6 250.2 258.8 267.4 276.0 284.6 293.2 301.8" y="81.2" fill="#cdd6f4">examples/*.trsh</text>
+<path d="M39.50 86.00V105.00" stroke="#00afff" stroke-width="1.3" stroke-dasharray="3 3" fill="none"/>
+<text x="52.4 61.0 69.6" y="100.2" fill="#cdd6f4">yap</text>
+<path d="M39.50 105.00V124.00" stroke="#00afff" stroke-width="1.3" stroke-dasharray="3 3" fill="none"/>
+<text x="86.8 95.4 104.0 112.6" y="119.2" fill="#cdd6f4">echo</text>
+<text x="129.8 138.4 147.0 155.6 164.2 172.8 181.4 190.0" y="119.2" fill="#cdd6f4">&quot;$dosya:</text>
+<text x="207.2 215.8 224.4 233.0 241.6" y="119.2" fill="#cdd6f4">$(oku</text>
+<text x="258.8 267.4 276.0 284.6 293.2 301.8" y="119.2" fill="#cdd6f4">$dosya</text>
+<text x="319.0" y="119.2" fill="#cdd6f4">|</text>
+<text x="336.2 344.8" y="119.2" fill="#cdd6f4">wc</text>
+<text x="362.0 370.6 379.2" y="119.2" fill="#cdd6f4">-l)</text>
+<text x="396.4 405.0 413.6 422.2 430.8 439.4" y="119.2" fill="#cdd6f4">satır&quot;</text>
+<path d="M39.50 124.00V143.00" stroke="#00afff" stroke-width="1.3" stroke-dasharray="3 3" fill="none"/>
+<text x="52.4 61.0 69.6" y="138.2" fill="#cdd6f4">son</text>
+<text x="18.0 26.6 35.2 43.8 52.4 61.0 69.6 78.2 86.8 95.4 104.0 112.6 121.2 129.8 138.4 147.0 155.6 164.2 172.8 181.4 190.0" y="157.2" fill="#cdd6f4">examples/backup.trsh:</text>
+<text x="207.2 215.8" y="157.2" fill="#cdd6f4">25</text>
+<text x="233.0 241.6 250.2 258.8 267.4" y="157.2" fill="#cdd6f4">satır</text>
+<text x="18.0 26.6 35.2 43.8 52.4 61.0 69.6 78.2 86.8 95.4 104.0 112.6 121.2 129.8 138.4 147.0 155.6 164.2 172.8 181.4 190.0 198.6 207.2 215.8 224.4 233.0 241.6 250.2" y="176.2" fill="#cdd6f4">examples/count-c-files.trsh:</text>
+<text x="267.4 276.0" y="176.2" fill="#cdd6f4">14</text>
+<text x="293.2 301.8 310.4 319.0 327.6" y="176.2" fill="#cdd6f4">satır</text>
+<text x="18.0 26.6 35.2 43.8 52.4 61.0 69.6 78.2 86.8 95.4 104.0 112.6 121.2 129.8 138.4 147.0 155.6 164.2 172.8 181.4" y="195.2" fill="#cdd6f4">examples/greet.trsh:</text>
+<text x="198.6 207.2" y="195.2" fill="#cdd6f4">14</text>
+<text x="224.4 233.0 241.6 250.2 258.8" y="195.2" fill="#cdd6f4">satır</text>
+<path d="M22.30 238.00V232.80Q22.30 228.50 26.60 228.50H26.60" stroke="#00afff" stroke-width="1.3" fill="none"/>
+<path d="M26.60 228.50L35.20 228.50" stroke="#00afff" stroke-width="1.3" fill="none" stroke-linecap="square"/>
+<text x="43.8 52.4 61.0 69.6 78.2" y="233.2" fill="#cdd6f4" class="b">Yusuf</text>
+<text x="95.4 104.0 112.6 121.2" y="233.2" fill="#cdd6f4" class="b">Enes</text>
+<text x="138.4 147.0 155.6 164.2 172.8" y="233.2" fill="#cdd6f4" class="b">Kütük</text>
+<text x="190.0" y="233.2" fill="#585b70">·</text>
+<text x="207.2 215.8 224.4 233.0 241.6 250.2 258.8 267.4 276.0 284.6 293.2 301.8 310.4 319.0 327.6 336.2 344.8 353.4 362.0" y="233.2" fill="#00afff">~/projects/tr-shell</text>
+<text x="379.2" y="233.2" fill="#585b70">·</text>
+<text x="396.4" y="233.2" fill="#87afff">⎇</text>
+<text x="413.6 422.2 430.8 439.4" y="233.2" fill="#87afff">main</text>
+<text x="456.6" y="233.2" fill="#585b70">·</text>
+<text x="473.8 482.4 491.0 499.6 508.2" y="233.2" fill="#585b70">13:50</text>
+<text x="534.0" y="233.2" fill="#a6e3a1" class="b">✓</text>
+<path d="M22.30 238.00V243.20Q22.30 247.50 26.60 247.50H26.60" stroke="#00afff" stroke-width="1.3" fill="none"/>
+<path d="M26.60 247.50L35.20 247.50" stroke="#00afff" stroke-width="1.3" fill="none" stroke-linecap="square"/>
+<text x="35.2" y="252.2" fill="#00afff">❯</text>
+<text x="52.4 61.0 69.6 78.2" y="252.2" fill="#cdd6f4">eger</text>
+<text x="95.4 104.0 112.6 121.2" y="252.2" fill="#cdd6f4">test</text>
+<text x="138.4 147.0" y="252.2" fill="#cdd6f4">-d</text>
+<text x="164.2 172.8 181.4" y="252.2" fill="#cdd6f4">src</text>
+<text x="198.6 207.2 215.8" y="252.2" fill="#cdd6f4">ise</text>
+<text x="233.0 241.6 250.2 258.8" y="252.2" fill="#cdd6f4">echo</text>
+<text x="276.0 284.6 293.2 301.8" y="252.2" fill="#cdd6f4">&quot;src</text>
+<text x="319.0 327.6 336.2 344.8 353.4" y="252.2" fill="#cdd6f4">var&quot;;</text>
+<text x="370.6 379.2 387.8 396.4 405.0 413.6 422.2" y="252.2" fill="#cdd6f4">degilse</text>
+<text x="439.4 448.0 456.6 465.2" y="252.2" fill="#cdd6f4">echo</text>
+<text x="482.4 491.0 499.6 508.2" y="252.2" fill="#cdd6f4">yok;</text>
+<text x="525.4 534.0 542.6" y="252.2" fill="#cdd6f4">son</text>
+<text x="18.0 26.6 35.2" y="271.2" fill="#cdd6f4">src</text>
+<text x="52.4 61.0 69.6" y="271.2" fill="#cdd6f4">var</text>
+<path d="M22.30 314.00V308.80Q22.30 304.50 26.60 304.50H26.60" stroke="#00afff" stroke-width="1.3" fill="none"/>
+<path d="M26.60 304.50L35.20 304.50" stroke="#00afff" stroke-width="1.3" fill="none" stroke-linecap="square"/>
+<text x="43.8 52.4 61.0 69.6 78.2" y="309.2" fill="#cdd6f4" class="b">Yusuf</text>
+<text x="95.4 104.0 112.6 121.2" y="309.2" fill="#cdd6f4" class="b">Enes</text>
+<text x="138.4 147.0 155.6 164.2 172.8" y="309.2" fill="#cdd6f4" class="b">Kütük</text>
+<text x="190.0" y="309.2" fill="#585b70">·</text>
+<text x="207.2 215.8 224.4 233.0 241.6 250.2 258.8 267.4 276.0 284.6 293.2 301.8 310.4 319.0 327.6 336.2 344.8 353.4 362.0" y="309.2" fill="#00afff">~/projects/tr-shell</text>
+<text x="379.2" y="309.2" fill="#585b70">·</text>
+<text x="396.4" y="309.2" fill="#87afff">⎇</text>
+<text x="413.6 422.2 430.8 439.4" y="309.2" fill="#87afff">main</text>
+<text x="456.6" y="309.2" fill="#585b70">·</text>
+<text x="473.8 482.4 491.0 499.6 508.2" y="309.2" fill="#585b70">13:51</text>
+<text x="534.0" y="309.2" fill="#a6e3a1" class="b">✓</text>
+<path d="M22.30 314.00V319.20Q22.30 323.50 26.60 323.50H26.60" stroke="#00afff" stroke-width="1.3" fill="none"/>
+<path d="M26.60 323.50L35.20 323.50" stroke="#00afff" stroke-width="1.3" fill="none" stroke-linecap="square"/>
+<text x="35.2" y="328.2" fill="#00afff">❯</text>
+<text x="52.4 61.0 69.6 78.2" y="328.2" fill="#cdd6f4">trsh</text>
+<text x="95.4 104.0 112.6 121.2 129.8 138.4 147.0 155.6 164.2 172.8 181.4 190.0 198.6 207.2 215.8 224.4 233.0 241.6 250.2" y="328.2" fill="#cdd6f4">examples/greet.trsh</text>
+<text x="267.4 276.0 284.6 293.2" y="328.2" fill="#cdd6f4">Ayşe</text>
+<text x="310.4 319.0 327.6 336.2 344.8 353.4" y="328.2" fill="#cdd6f4">Mehmet</text>
+<text x="18.0 26.6 35.2 43.8 52.4 61.0 69.6" y="347.2" fill="#cdd6f4">Merhaba</text>
+<text x="86.8 95.4 104.0 112.6 121.2" y="347.2" fill="#cdd6f4">Ayşe!</text>
+<text x="18.0 26.6 35.2 43.8 52.4 61.0 69.6" y="366.2" fill="#cdd6f4">Merhaba</text>
+<text x="86.8 95.4 104.0 112.6 121.2 129.8 138.4" y="366.2" fill="#cdd6f4">Mehmet!</text>
+<text x="18.0 26.6 35.2 43.8 52.4 61.0" y="385.2" fill="#cdd6f4">Toplam</text>
+<text x="78.2" y="385.2" fill="#cdd6f4">2</text>
+<text x="95.4 104.0 112.6 121.2" y="385.2" fill="#cdd6f4">kişi</text>
+<text x="138.4 147.0 155.6 164.2 172.8 181.4 190.0 198.6 207.2 215.8 224.4" y="385.2" fill="#cdd6f4">selamlandı,</text>
+<text x="241.6 250.2 258.8 267.4" y="385.2" fill="#cdd6f4">saat</text>
+<text x="284.6 293.2 301.8 310.4 319.0 327.6" y="385.2" fill="#cdd6f4">13:51.</text>
+<path d="M22.30 428.00V422.80Q22.30 418.50 26.60 418.50H26.60" stroke="#00afff" stroke-width="1.3" fill="none"/>
+<path d="M26.60 418.50L35.20 418.50" stroke="#00afff" stroke-width="1.3" fill="none" stroke-linecap="square"/>
+<text x="43.8 52.4 61.0 69.6 78.2" y="423.2" fill="#cdd6f4" class="b">Yusuf</text>
+<text x="95.4 104.0 112.6 121.2" y="423.2" fill="#cdd6f4" class="b">Enes</text>
+<text x="138.4 147.0 155.6 164.2 172.8" y="423.2" fill="#cdd6f4" class="b">Kütük</text>
+<text x="190.0" y="423.2" fill="#585b70">·</text>
+<text x="207.2 215.8 224.4 233.0 241.6 250.2 258.8 267.4 276.0 284.6 293.2 301.8 310.4 319.0 327.6 336.2 344.8 353.4 362.0" y="423.2" fill="#00afff">~/projects/tr-shell</text>
+<text x="379.2" y="423.2" fill="#585b70">·</text>
+<text x="396.4" y="423.2" fill="#87afff">⎇</text>
+<text x="413.6 422.2 430.8 439.4" y="423.2" fill="#87afff">main</text>
+<text x="456.6" y="423.2" fill="#585b70">·</text>
+<text x="473.8 482.4 491.0 499.6 508.2" y="423.2" fill="#585b70">13:51</text>
+<text x="534.0" y="423.2" fill="#a6e3a1" class="b">✓</text>
+<path d="M22.30 428.00V433.20Q22.30 437.50 26.60 437.50H26.60" stroke="#00afff" stroke-width="1.3" fill="none"/>
+<path d="M26.60 437.50L35.20 437.50" stroke="#00afff" stroke-width="1.3" fill="none" stroke-linecap="square"/>
+<text x="35.2" y="442.2" fill="#00afff">❯</text>
+</g></svg>

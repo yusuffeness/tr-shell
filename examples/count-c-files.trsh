@@ -1,7 +1,7 @@
 #!/usr/bin/env trsh
 # Counts the .c and .h files in each folder given (default: the current one).
 #
-#   trsh ornekler/sayac.trsh src tests
+#   trsh examples/count-c-files.trsh src tests
 
 # $(...) output is split into words, so this gives one word per folder.
 her klasor icin $(eger test $# -eq 0 ise echo .; degilse echo "$@"; son)

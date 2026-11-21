@@ -4,8 +4,8 @@
 #   make run        build and start the shell
 #   make test       run the behaviour tests
 #   make debug      build with AddressSanitizer and UBSan
-#   make install    install to ~/.local/bin (override with PREFIX=...)
-#   make uninstall  remove the installed binary
+#   make install    install trsh and its man page under ~/.local (PREFIX=...)
+#   make uninstall  remove what make install put there
 #   make clean      remove build output
 
 TARGET   := trsh
@@ -22,6 +22,7 @@ LDLIBS   += -lm
 
 PREFIX   ?= $(HOME)/.local
 BINDIR   := $(PREFIX)/bin
+MANDIR   := $(PREFIX)/share/man/man1
 
 # GNU readline gives line editing, history on the arrow keys and Tab
 # completion. It is used when found; `make READLINE=0` builds without it.
@@ -65,9 +66,11 @@ debug:
 install: $(TARGET)
 	install -d $(BINDIR)
 	install -m 755 $(TARGET) $(BINDIR)/$(TARGET)
+	install -d $(MANDIR)
+	install -m 644 docs/trsh.1 $(MANDIR)/trsh.1
 
 uninstall:
-	rm -f $(BINDIR)/$(TARGET)
+	rm -f $(BINDIR)/$(TARGET) $(MANDIR)/trsh.1
 
 clean:
 	rm -rf $(BUILD) $(TARGET)

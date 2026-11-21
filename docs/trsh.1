@@ -1,0 +1,288 @@
+.\" Manual page for tr-shell. View with: man ./docs/trsh.1
+.TH TRSH 1 "November 2026" "tr-shell 1.0.0" "User Commands"
+.SH NAME
+trsh \- a Unix shell with Turkish commands
+.SH SYNOPSIS
+.B trsh
+.br
+.B trsh
+.I file
+.RI [ argument ...]
+.br
+.B trsh \-c
+.I command
+.RI [ name
+.RI [ argument ...]]
+.br
+.B trsh
+.RB [ \-\-surum | \-v ]
+.RB [ \-\-yardim | \-h ]
+.SH DESCRIPTION
+.B trsh
+is an interactive command interpreter and scripting language whose
+commands, keywords and messages are in Turkish.
+Programs in
+.B PATH
+run as usual, so
+.BR ls ,
+.B git
+and
+.B gcc
+work next to the Turkish commands.
+.PP
+Started on a terminal, the shell switches to the alternate screen, shows a
+welcome box and a two\-line prompt with the directory, git branch, time and
+the status of the last command.
+When standard input is not a terminal, commands are read from it without a
+prompt.
+.SH OPTIONS
+.TP
+.I file
+Run the script
+.IR file .
+Inside it,
+.B $0
+is the file name and
+.BR $1 ", " $2 " ..."
+are the arguments.
+The exit status is that of the last command, or the code given to
+.BR cikis .
+.TP
+.BI \-c " command"
+Run
+.I command
+and exit.
+The next argument, if given, becomes
+.BR $0 ;
+the rest become
+.BR $1 " ..."
+.TP
+.BR \-v ", " \-\-surum
+Print the version and exit.
+.TP
+.BR \-h ", " \-\-yardim
+Print a usage summary and exit.
+.SH SHELL SYNTAX
+.TP
+.B Quoting
+Single quotes keep text literally; double quotes allow variables and
+.BR $(...) ;
+a backslash escapes the next character.
+.TP
+.B Lists
+.IB a " ; " b
+runs both,
+.IB a " && " b
+runs
+.I b
+if
+.I a
+succeeded,
+.IB a " || " b
+if it failed,
+.IB a " &"
+runs
+.I a
+in the background.
+A line ending in
+.BR | ,
+.B &&
+or
+.B ||
+continues on the next line.
+.TP
+.B Pipelines and redirection
+.IB a " | " b
+connects output to input.
+Redirections are
+.BR "< > >> 2> 2>> 2>&1" .
+.TP
+.B Expansion
+.BR $NAME ,
+.BR ${NAME} ,
+.B $?
+(last status),
+.B $$
+(shell PID),
+.BR $0 \- $9 ,
+.B $#
+(argument count),
+.B $@
+(all arguments),
+.B ~
+(home directory),
+.B $(command)
+(its output) and the file name patterns
+.BR * ,
+.B ?
+and
+.BR [...] .
+Unquoted
+.B $(...)
+and
+.B $@
+are split into words.
+.B NAME=value
+sets a variable; placed before a command it applies to that command only.
+.TP
+.B Comments
+A
+.B #
+at the start of a word starts a comment that runs to the end of the line.
+.SH CONTROL FLOW
+Keywords are recognized only where a command starts and only when unquoted.
+Blocks may be written on one line or across several, may be nested, and may
+be redirected, piped or run in the background as a whole.
+.TP
+.BI "eger " condition " ise " commands " [degilse " commands "] son"
+Runs the first
+.I commands
+if
+.I condition
+succeeds, otherwise the
+.B degilse
+part.
+.B ise
+may follow the condition without a separator.
+.TP
+.BI "dongu " condition " yap " commands " son"
+Repeats
+.I commands
+while
+.I condition
+succeeds.
+.TP
+.BI "her " name " icin " words " yap " commands " son"
+Runs
+.I commands
+once for each of the expanded
+.IR words ,
+with the variable
+.I name
+set to it.
+.TP
+.BR kir ", " devam
+Leave the innermost loop, or go on to its next turn.
+.SH BUILTIN COMMANDS
+.B yardim
+lists every command;
+.BI "yardim " command
+explains one.
+The most important ones:
+.TP
+.BR listele ", " agac ", " oku ", " kopyala ", " tasi ", " klasor ", " olustur ", " sil ", " copkutusu
+List, show, copy, move and create files.
+.B sil
+moves files to a trash in
+.I ~/.trsh/cop
+that
+.B copkutusu
+can restore from.
+.TP
+.BR gec ", " geri ", " ev ", " nerdeyim
+Change to a directory, back to the previous one, or home; print the current one.
+.TP
+.BR sistem ", " surecler ", " oldur ", " disk ", " bellek ", " tarih ", " zamanla
+System overview, processes, disk and memory use, date, and timing a command.
+.TP
+.BR hesapla ", " not ", " notlar
+Calculator, and quick notes kept in
+.IR ~/.trsh/notlar .
+.TP
+.BR isler ", " on ", " arka
+List jobs, bring one to the foreground, continue one in the background.
+.TP
+.BR degisken ", " takmaad ", " takmaadsil ", " ayar ", " tema ", " gecmis
+Variables, aliases, settings, color theme and history.
+.TP
+.BI "kaynak " file
+Run
+.I file
+in the current shell, so its variables and aliases stay.
+.TP
+.BR cikis " [" \fIcode\fR "], " exit
+Leave the shell.
+.SH KEYS
+.TP
+.B Ctrl+C
+Discard the line or open block being typed, or stop the running command
+or loop.
+The shell itself is never stopped.
+.TP
+.B Ctrl+Z
+Stop the running job;
+.B isler
+lists it and
+.B on
+or
+.B arka
+resumes it.
+.TP
+.B Ctrl+D
+Leave the shell (on an empty line).
+.TP
+.BR Tab ", " Up ", " Down ", " Ctrl+R
+Completion and history, when built with GNU readline.
+.SH FILES
+.TP
+.I ~/.trsh/config
+Settings
+.RB ( tema ,
+.BR isim ,
+.BR karsilama ,
+.BR gecmis_boyutu )
+and a
+.B [takmaad]
+section with aliases.
+.TP
+.I ~/.trsh/baslangic
+Commands run when an interactive shell starts.
+.TP
+.I ~/.trsh/history
+Command history.
+.TP
+.I ~/.trsh/cop
+Trash used by
+.BR sil .
+.TP
+.I ~/.trsh/notlar
+Notes.
+.SH ENVIRONMENT
+.TP
+.B NO_COLOR
+If set, no colors are used.
+.TP
+.B EDITOR
+Editor opened by
+.BR "ayar duzenle" .
+.TP
+.B HOME
+Location of the
+.I ~/.trsh
+directory.
+.SH EXIT STATUS
+The status of the last command run;
+.B cikis
+.I code
+sets it explicitly.
+A syntax error gives 2, a command that is not found 127, a file that cannot
+be executed 126, and a command killed by signal
+.I N
+gives 128+\fIN\fR.
+.SH EXAMPLES
+.nf
+her dosya icin *.c yap
+    echo "$dosya: $(oku $dosya | wc \-l) lines"
+son
+
+eger test \-f notlar.txt ise oku notlar.txt; degilse echo yok; son
+
+trsh \-c 'echo $0 $1' name first
+.fi
+.SH SEE ALSO
+.BR bash (1),
+.BR sh (1)
+.PP
+https://github.com/yusuffeness/tr\-shell
+.SH AUTHOR
+Yusuf Enes K\(:ut\(:uk

@@ -1,71 +1,133 @@
-# tr-shell
+<h1 align="center">tr-shell</h1>
 
-A small Unix shell written in C, with Turkish commands and a colorful prompt.
+<p align="center">
+  <b>A Unix shell written in C, with Turkish commands, a scripting language and a modern prompt.</b>
+</p>
 
-tr-shell started as an Operating Systems course assignment and is being grown into a
-complete, everyday-usable shell. It is a hands-on project around the classic process
-APIs: `fork`, `execvp`, `waitpid`, `pipe`, `dup2`, signals, process groups and
-`tcsetpgrp`.
+<p align="center">
+  <a href="https://github.com/yusuffeness/tr-shell/actions/workflows/ci.yml"><img src="https://github.com/yusuffeness/tr-shell/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/yusuffeness/tr-shell/releases/latest"><img src="https://img.shields.io/github/v/release/yusuffeness/tr-shell?sort=semver" alt="Latest release"></a>
+  <img src="https://img.shields.io/badge/language-C11-blue" alt="C11">
+  <img src="https://img.shields.io/badge/platform-Linux%20%7C%20WSL-lightgrey" alt="Linux | WSL">
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/yusuffeness/tr-shell" alt="MIT License"></a>
+</p>
 
-> **Status:** v0.8 — scripting. See [ROADMAP.md](ROADMAP.md) for what comes next.
+<p align="center">
+  <img src="docs/images/welcome.svg" alt="tr-shell welcome screen and prompt" width="760">
+</p>
 
-```text
-╭────────────────────────────────────────────────────────────────╮
-│                                                                │
-│   ████████╗██████╗ ███████╗██╗  ██╗                            │
-│   ╚══██╔══╝██╔══██╗██╔════╝██║  ██║   tr-shell 0.8.0           │
-│      ██║   ██████╔╝███████╗███████║   Yusuf Enes Kütük         │
-│      ██║   ██╔══██╗╚════██║██╔══██║                            │
-│      ██║   ██║  ██║███████║██║  ██║   ~/projects/tr-shell      │
-│      ╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝   20 Kasım 2026 · 13:01    │
-│                                                                │
-│   ✦ Komutları görmek için     yardim                           │
-│   ✦ Temayı değiştirmek için   tema mor                         │
-│   ✦ Çıkmak için               cikis                            │
-│                                                                │
-╰────────────────────────────────────────────────────────────────╯
+tr-shell (`trsh`) is a complete interactive shell: pipelines, redirection, variables,
+job control, line editing and a small scripting language — with every command,
+keyword and message in Turkish. Programs in your `PATH` keep working, so `git`, `gcc`
+and `ls` sit right next to `listele`, `gec` and `hesapla`.
 
-╭─ Yusuf Enes Kütük · ~/projects/tr-shell · ⎇ main · 13:01
-╰─❯ sleep 2
+It began as an Operating Systems course assignment and grew into a hands-on study of
+the classic Unix process APIs: `fork`, `execvp`, `waitpid`, `pipe`, `dup2`, signals,
+process groups and `tcsetpgrp`. The lexer, parser,
+expander, executor and job control are all written from scratch.
 
-╭─ Yusuf Enes Kütük · ~/projects/tr-shell · ⎇ main · 13:01  ✓ 2,0 sn
-╰─❯ listel
-listel: komut bulunamadı. Bunu mu demek istediniz: listele?
+## Contents
 
-╭─ Yusuf Enes Kütük · ~/projects/tr-shell · ⎇ main · 13:01  ✗ 127
-╰─❯
+- [Highlights](#highlights)
+- [Getting started](#getting-started)
+- [Usage](#usage)
+- [Commands](#commands)
+- [Shell syntax](#shell-syntax)
+- [Scripting](#scripting)
+- [Configuration](#configuration)
+- [Keyboard](#keyboard)
+- [How it works](#how-it-works)
+- [Testing](#testing)
+- [Contributing](#contributing)
+- [License](#license)
+
+## Highlights
+
+- **A real shell language** — quotes and escapes, pipelines of any length,
+  `< > >> 2> 2>> 2>&1`, `&&` / `||` / `;`, variables, `$(...)`, file name patterns
+  and comments.
+- **Scripting in Turkish** — `eger` / `degilse`, `dongu`, `her`, `kir`, `devam`,
+  script arguments, `kaynak` and a startup file.
+- **Job control** — `&`, Ctrl+Z, `isler`, `on` and `arka`; every job in its own
+  process group with its own terminal settings.
+- **A prompt that tells you things** — directory, git branch, time, ✓ or ✗ with the
+  exit code, and how long slow commands took. Five color themes.
+- **Commands written in C** — `listele`, `agac`, `sistem`, a calculator, notes, and a
+  `sil` that moves files to a trash you can restore from.
+- **Comfortable to use** — readline editing, persistent history with `!!` and `!N`,
+  Tab completion, "did you mean …?" for typos, and a Ctrl+C that never kills the shell.
+- **Its own screen** — opens on the terminal's alternate screen like `vim`, and your
+  previous output comes back when you leave.
+- **Configurable** — aliases, theme, prompt name and welcome screen in
+  `~/.trsh/config`, editable with `ayar`.
+- **Well tested** — a behaviour test suite for every feature, run in CI with gcc and clang and under
+  AddressSanitizer and UBSan.
+
+## Getting started
+
+### Requirements
+
+- Linux or WSL (Windows Subsystem for Linux)
+- A C11 compiler (`gcc` or `clang`) and `make`
+- GNU readline — optional but recommended; it enables line editing, history on the
+  arrow keys and Tab completion. The Makefile detects it automatically.
+
+```bash
+sudo apt install build-essential libreadline-dev   # Debian, Ubuntu, WSL
 ```
 
-## Features
+### Build and run
 
-- **A real shell language:** quotes, pipes, redirection, `&&` / `||` / `;`, variables,
-  file name patterns and job control — see [Shell syntax](#shell-syntax)
-- **Scripts in Turkish:** `eger` / `degilse`, `dongu`, `her`, `$(...)` and script
-  arguments; run files with `trsh betik.trsh` — see [Scripting](#scripting)
-- **Its own screen.** Opens on the terminal's alternate screen like `vim` or `less`;
-  your previous terminal output comes back when you leave
-- **Welcome box** with logo, version, directory and date (a plain header on narrow
-  terminals)
-- **Two-line prompt** with directory, git branch and time; ✓ or ✗ with the exit code
-  after each command, and the duration of commands that take a second or more
-- **Themes:** `tema mor` switches the accent color and remembers it
-- **Your own commands:** `takmaad ll=listele -d`, kept between sessions
-- **A config file** for the theme, the name in the prompt, the welcome screen and
-  history size — see [Configuration](#configuration)
-- **Line editing** with readline: history on the arrow keys and Ctrl+R, kept between
-  sessions; Tab completes commands and file names; `gecmis`, `!!`, `!N`
-- **Ctrl+C** drops the line you are typing or stops the running command — never the
-  shell itself
-- **"Did you mean …?"** when a command name has a typo
-- **Commands written from scratch in C:** `listele`, `agac`, `sistem`, a calculator,
-  quick notes, and a `sil` that moves files to a trash you can restore from
-- **Turkish commands** next to the usual ones — `ls`, `git`, `gcc` and everything else
-  in your `PATH` still work
-- **Built-in help:** `yardim` lists every command, `yardim KOMUT` explains one
-- Turkish messages, including common system errors
-- Runs external programs in a child process (`fork` + `execvp` + `waitpid`) and
-  reports children killed by a signal
-- Non-interactive mode when input comes from a file or a pipe; respects `NO_COLOR`
+```bash
+git clone https://github.com/yusuffeness/tr-shell.git
+cd tr-shell
+make          # builds ./trsh
+./trsh        # starts the shell; leave with cikis or Ctrl+D
+```
+
+### Install
+
+```bash
+make install                 # installs trsh and its man page under ~/.local
+make install PREFIX=/usr/local
+make uninstall
+```
+
+Make sure `~/.local/bin` is in your `PATH`, then run `trsh` from anywhere and read the
+manual with `man trsh`. Prebuilt Linux binaries are attached to each
+[release](https://github.com/yusuffeness/tr-shell/releases).
+
+| Target | |
+| --- | --- |
+| `make` | Build `./trsh` (objects in `build/`) |
+| `make run` | Build and start the shell |
+| `make test` | Run the test suite |
+| `make debug` | Build with AddressSanitizer and UBSan |
+| `make READLINE=0` | Build without readline |
+| `make clean` | Remove build output |
+
+For the welcome box and prompt to line up, use a terminal font with box-drawing
+characters — Windows Terminal with Cascadia Code, iTerm2, GNOME Terminal and most
+modern terminals work out of the box.
+
+## Usage
+
+```text
+trsh                              interactive shell
+trsh FILE [ARG...]                run a script; $0 is FILE, $1... the arguments
+trsh -c 'COMMAND' [NAME ARG...]   run one command string
+trsh --surum                      print the version
+trsh --yardim                     print usage
+```
+
+When standard input is not a terminal — a pipe or a redirected file — commands are
+read without a prompt or colors. `NO_COLOR` turns colors off everywhere.
+
+Inside the shell, `yardim` lists every command and `yardim KOMUT` explains one.
+
+<p align="center">
+  <img src="docs/images/commands.svg" alt="Built-in commands: agac, hesapla, a typo suggestion, a pipeline, timing and a theme change" width="760">
+</p>
 
 ## Commands
 
@@ -129,22 +191,18 @@ klasor yeni; gec yeni                  # one after the other
 AD=Enes; echo "Merhaba $AD" ~         # variables: $AD ${AD} $? $$ ~
 DEBUG=1 ./program                      # variable for one command only
 oku *.c                                # * ? [...] match file names
+echo "bugün $(date +%A)"               # command substitution
 sleep 100 &                            # background job
-echo "bugün $(tarih)"                  # command substitution
 # a comment
 ```
 
-**Job control:** Ctrl+Z stops the running job, `isler` lists jobs, `on` brings one back to
-the foreground and `arka` lets it continue in the background. Ctrl+C stops only the
-foreground job, never the shell.
-
-Not supported: here-documents, functions and word splitting of unquoted variables
+Not supported: here-documents, functions, and word splitting of unquoted variables
 (`$(...)` and `$@` are split, as in bash).
 
 ## Scripting
 
-Control flow uses Turkish keywords. Blocks can be written on one line or on several;
-in the interactive shell, an open block shows a `┆` prompt until its `son`.
+Control flow uses Turkish keywords. A block can be written on one line or across
+several; in the interactive shell an open block shows a `┆` prompt until its `son`.
 
 ```bash
 eger test -f notlar.txt ise         # if ... then
@@ -160,29 +218,38 @@ her dosya icin *.c yap              # for ... in ... do
 son
 ```
 
-| Keyword | bash | |
-|---|---|---|
-| `eger KOMUT ise ... [degilse ...] son` | `if; then; else; fi` | `ise` may follow the condition without a `;` |
+| tr-shell | bash | Notes |
+| --- | --- | --- |
+| `eger KOMUT ise ... [degilse ...] son` | `if; then; else; fi` | `ise` may follow the condition without `;` |
 | `dongu KOMUT yap ... son` | `while; do; done` | |
-| `her AD icin KELİMELER yap ... son` | `for in; do; done` | words are globbed and expanded |
+| `her AD icin KELİMELER yap ... son` | `for in; do; done` | words are expanded and globbed |
 | `kir`, `devam` | `break`, `continue` | |
+| `kaynak DOSYA` | `source` | runs a file in the current shell |
+| `cikis [KOD]` | `exit` | |
 
-Keywords count only where a command starts and when unquoted: `echo son` prints
-`son`, and `"ise"` is an ordinary word.
+Keywords count only where a command starts and only when unquoted: `echo son` prints
+`son`, and `"ise"` is an ordinary word. Blocks nest, and a whole block can be
+redirected (`... son > sonuc.txt`), piped or sent to the background.
 
 **Scripts.** Put commands in a file and run it with `trsh betik.trsh arg1 arg2`, or
-make it executable with a `#!/usr/bin/env trsh` first line. Inside, `$0` is the script
-name, `$1` … `$9` the arguments, `$#` their count and `$@` all of them (`"$@"` keeps
-each argument whole). `cikis 3` ends the script with exit code 3.
-
-```bash
-trsh ornekler/selam.trsh Ayşe Mehmet     # run a script with arguments
-trsh -c 'echo $0 $1' ad birinci          # run one command string
-kaynak ayarlarim.trsh                    # run a file in this shell (keeps variables)
-```
+add a `#!/usr/bin/env trsh` first line and make it executable. Inside a script `$0`
+is its name, `$1` … `$9` the arguments, `$#` their count and `$@` all of them
+(`"$@"` keeps each argument whole). `cikis 3` ends it with exit code 3.
 
 **Startup file.** If `~/.trsh/baslangic` exists, the interactive shell runs it before
-showing the prompt — a place for variables and aliases, like `~/.bashrc`.
+the first prompt — the place for variables and aliases, like `~/.bashrc`.
+
+<p align="center">
+  <img src="docs/images/scripting.svg" alt="A multi-line her loop, an eger condition and a script run with arguments" width="760">
+</p>
+
+The [`examples/`](examples) folder has complete scripts:
+
+| Script | Shows |
+| --- | --- |
+| [`greet.trsh`](examples/greet.trsh) | Arguments, `"$@"`, `eger`, `cikis` |
+| [`count-c-files.trsh`](examples/count-c-files.trsh) | `her`, `devam`, nested `$(...)` |
+| [`backup.trsh`](examples/backup.trsh) | Counters, `degilse`, `&&`, dated folders |
 
 ## Configuration
 
@@ -211,103 +278,54 @@ guncelle = git pull && make
 
 A line the shell cannot understand is reported with its line number and skipped.
 
-## Requirements
+## Keyboard
 
-Linux, macOS or WSL with a C11 compiler (gcc or clang) and `make`.
+| Key | Action |
+| --- | --- |
+| Ctrl+C | Discard the line or open block being typed, or stop the running command or loop |
+| Ctrl+Z | Stop the running job; resume it with `on` or `arka` |
+| Ctrl+D | Leave the shell (on an empty line) |
+| ↑ / ↓, Ctrl+R | Browse and search history (with readline) |
+| Tab | Complete command and file names (with readline) |
 
-GNU readline is optional but recommended: it adds line editing, history on the arrow
-keys and Tab completion. The Makefile uses it automatically when it is installed.
-
-```bash
-sudo apt install build-essential libreadline-dev   # Debian, Ubuntu, WSL
-```
-
-`hakkinda` shows which mode the shell was built in; `make READLINE=0` builds without it.
-
-## Build and run
-
-```bash
-make          # builds ./trsh
-make run      # builds and starts the shell
-make test     # runs the test suite
-make debug    # builds with AddressSanitizer and UBSan
-make install  # installs to ~/.local/bin (override with PREFIX=...)
-```
+## How it works
 
 ```text
-trsh                          interactive shell
-trsh FILE [ARG...]            run a script
-trsh -c 'COMMAND' [NAME ARG...]   run one command string
-trsh --surum | --yardim       version | usage
+ input ──► lexer ──► aliases ──► parser ──► executor ──► fork / execvp
+ readline   tokens    takmaad    syntax tree  expansion    jobs, waitpid
 ```
 
-For the box and logo to line up, use a terminal font with box-drawing characters
-(Windows Terminal with Cascadia Code, iTerm2, GNOME Terminal and most modern
-terminals work out of the box).
-
-## Project layout
+A line is split into tokens, aliases are expanded, and a recursive-descent parser
+builds a syntax tree of lists, pipelines and compound commands. Each command is
+expanded just before it runs. A lone builtin or block runs inside the shell so it can
+change the shell's state; everything else is forked, connected with pipes and placed
+in its own process group. [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) walks through
+the code in detail.
 
 ```text
-src/
-  main.c        options (trsh FILE, -c) and the interactive loop
-  run.c         running text, files, $(...) capture; kaynak
-  shell.h       shared constants and shell state
-  commands.c    command table, dispatch and help
-  builtins.c    commands that run inside the shell (gec, geri, tarih ...)
-  lexer.c       tokens: words, quotes, operators
-  parser.c      syntax tree: lists, and/or, pipelines, redirections, eger/dongu/her
-  expand.c      variables, $(...), $1 $# $@, ~, quote removal, file name patterns
-  executor.c    pipes, redirections, builtins in the shell process, loops
-  jobs.c        job control: process groups, terminal, isler/on/arka
-  strvec.c      growable string arrays
-  input.c       reading a line (readline or plain)
-  history.c     history, `gecmis` and !-expansion
-  completion.c  Tab completion
-  signals.c     Ctrl+C, Ctrl+\ and Ctrl+Z handling
-  suggest.c     "did you mean" suggestions
-  config.c      ~/.trsh/config: settings, aliases, `ayar`
-  alias.c       takmaad / takmaadsil and alias expansion
-  files.c       listele and agac
-  sysinfo.c     sistem
-  trash.c       sil and copkutusu
-  calc.c        hesapla (recursive-descent parser)
-  notes.c       not and notlar
-  util.c        sizes, dates, yes/no questions
-  ui.c          alternate screen, banner, prompt, error output
-  theme.c       color themes and the `tema` command
-  git.c         git branch for the prompt
-  messages.c/h  all user-facing text
-ornekler/       example scripts
-tests/
-  run.sh        test runner
-  helpers/      scripts and files used by the tests
-  cases/        *.in inputs, *.out expected outputs, optional *.sed filters
+src/        the shell: one module per concern (lexer, parser, expand, executor, jobs ...)
+tests/      behaviour tests: cases/*.in → cases/*.out, run by tests/run.sh
+examples/   example scripts
+docs/       architecture notes, man page, screenshots
 ```
 
-## Adding a command
-
-Add one line to the table in `src/commands.c`. An alias needs only the program it
-runs:
-
-```c
-ALIAS("kopyala", RUN("cp", "-r"), G_FILES,
-      "kopyala KAYNAK HEDEF", "Dosya ya da klasör kopyalar"),
-```
-
-A builtin points to a C function in `src/builtins.c`. Help output is generated from
-the table automatically.
-
-## Tests
-
-Each `tests/cases/NAME.in` is fed to the shell; its output and exit code are compared
-with `NAME.out`. An optional `NAME.sed` filter blanks out parts that change between
-runs, such as timings.
+## Testing
 
 ```bash
-bash tests/run.sh          # all tests
-bash tests/run.sh help     # only tests whose name contains "help"
-UPDATE=1 bash tests/run.sh # regenerate expected outputs after an intended change
+make test                     # all tests
+bash tests/run.sh kaynak      # only tests whose name contains "kaynak"
+make debug && bash tests/run.sh   # under AddressSanitizer and UBSan
 ```
+
+Each `tests/cases/NAME.in` is fed to the shell and its output and exit status are
+compared with `NAME.out`. Every push and pull request runs the suite with gcc and
+clang, with and without readline, and under the sanitizers.
+
+## Contributing
+
+Bug reports and pull requests are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for
+the development setup, code style and how to add a command or a test, and
+[CHANGELOG.md](CHANGELOG.md) for the release history.
 
 ## License
 
