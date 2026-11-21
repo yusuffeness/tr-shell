@@ -106,7 +106,7 @@ static const char *shown_cwd(void)
     return cwd;
 }
 
-void ui_format_date(char *buf, size_t size, int with_year)
+void ui_format_date(char *buf, size_t size, int with_weekday)
 {
     static const char *const days[] = {
         "Pazar", "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi",
@@ -122,13 +122,13 @@ void ui_format_date(char *buf, size_t size, int with_year)
         snprintf(buf, size, "?");
         return;
     }
-    if (with_year)
+    if (with_weekday)
         snprintf(buf, size, "%s, %d %s %d · %02d:%02d", days[tm.tm_wday],
                  tm.tm_mday, months[tm.tm_mon], tm.tm_year + 1900,
                  tm.tm_hour, tm.tm_min);
-    else
-        snprintf(buf, size, "%s, %d %s · %02d:%02d", days[tm.tm_wday],
-                 tm.tm_mday, months[tm.tm_mon], tm.tm_hour, tm.tm_min);
+    else    /* at most 23 columns: "30 Ağustos 2026 · 23:59" */
+        snprintf(buf, size, "%d %s %d · %02d:%02d", tm.tm_mday,
+                 months[tm.tm_mon], tm.tm_year + 1900, tm.tm_hour, tm.tm_min);
 }
 
 /* ------------------------------------------------------- screen handling */
@@ -158,7 +158,8 @@ static void on_fatal_signal(int sig)
 
 static void install_signal_handlers(void)
 {
-    static const int sigs[] = { SIGHUP, SIGINT, SIGQUIT, SIGTERM };
+    /* Ctrl+C, Ctrl+\ and Ctrl+Z are handled in signals.c and do not end the shell. */
+    static const int sigs[] = { SIGHUP, SIGTERM };
     struct sigaction sa;
 
     memset(&sa, 0, sizeof sa);
@@ -268,8 +269,12 @@ static void banner_full(void)
         box_open();
         printf("   %s%s%s   ", ACCENT, logo[i], RESET);
         if (info[i] != NULL) {
-            printf("%s%s%s", style[i], info[i], RESET);
-            used += text_width(info[i]);
+            /* Never let a line push the right border out. */
+            const char *text = info[i];
+            if (text_width(text) > INFO_WIDTH)
+                text = text_tail(text, INFO_WIDTH);
+            printf("%s%s%s", style[i], text, RESET);
+            used += text_width(text);
         }
         box_close(used);
     }
@@ -310,7 +315,26 @@ void ui_goodbye(void)
  *
  * The status mark appears after the first command: ✓ on success, ✗ and the
  * exit code on failure. Commands that took a second or more show their time.
+ *
+ * ui_prompt() prints the first line; ui_prompt_tail() returns the second,
+ * which is handed to the line reader so it can redraw it while editing.
  */
+const char *ui_prompt_tail(int for_readline)
+{
+    static char buf[128];
+
+    if (!g_shell.use_color || theme_current()->accent[0] == '\0') {
+        snprintf(buf, sizeof buf, "╰─❯ ");
+    } else if (for_readline) {
+        /* \001 and \002 tell readline the escape codes take no space. */
+        snprintf(buf, sizeof buf, "\001%s\002╰─❯\001%s\002 ",
+                 theme_current()->accent, "\033[0m");
+    } else {
+        snprintf(buf, sizeof buf, "%s╰─❯%s ", theme_current()->accent, "\033[0m");
+    }
+    return buf;
+}
+
 void ui_prompt(void)
 {
     static int first = 1;
@@ -349,7 +373,7 @@ void ui_prompt(void)
                    MSG_SECONDS, RESET);
     }
 
-    printf("\n%s╰─❯%s ", ACCENT, RESET);
+    putchar('\n');
     fflush(stdout);
 }
 

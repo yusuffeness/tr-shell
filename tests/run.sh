@@ -6,6 +6,9 @@
 # are merged, "[exit N]" is appended, and the result is compared with
 # tests/cases/NAME.out.
 #
+# If tests/cases/NAME.sed exists, the output is passed through it first
+# (sed -E), to blank out parts that change from run to run, such as timings.
+#
 #   bash tests/run.sh              run all tests
 #   bash tests/run.sh cd           run tests whose name contains "cd"
 #   UPDATE=1 bash tests/run.sh     rewrite the expected outputs
@@ -48,7 +51,11 @@ for in_file in "$CASES"/*.in; do
     [ -n "$FILTER" ] && [[ "$name" != *"$FILTER"* ]] && continue
 
     out_file="$CASES/$name.out"
+    sed_file="$CASES/$name.sed"
     actual=$(run_trsh < "$in_file" 2>&1; echo "[exit $?]")
+    if [ -f "$sed_file" ]; then
+        actual=$(printf '%s\n' "$actual" | sed -E -f "$sed_file")
+    fi
 
     if [ "${UPDATE:-0}" = 1 ]; then
         printf '%s\n' "$actual" > "$out_file"

@@ -22,6 +22,17 @@ LDLIBS   ?=
 PREFIX   ?= $(HOME)/.local
 BINDIR   := $(PREFIX)/bin
 
+# GNU readline gives line editing, history on the arrow keys and Tab
+# completion. It is used when found; `make READLINE=0` builds without it.
+# (Debian/Ubuntu/WSL: sudo apt install libreadline-dev)
+READLINE_TEST := '\#include <stdio.h>\n\#include <readline/readline.h>\nint main(void) { rl_callback_sigcleanup(); return 0; }\n'
+READLINE ?= $(shell printf $(READLINE_TEST) | $(CC) -x c - -lreadline -o /dev/null 2>/dev/null && echo 1 || echo 0)
+
+ifeq ($(READLINE),1)
+CPPFLAGS += -DHAVE_READLINE
+LDLIBS   += -lreadline
+endif
+
 SRCS := $(wildcard $(SRC_DIR)/*.c)
 OBJS := $(SRCS:$(SRC_DIR)/%.c=$(BUILD)/%.o)
 DEPS := $(OBJS:.o=.d)

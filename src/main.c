@@ -1,13 +1,13 @@
 /*
  * main.c - tr-shell main loop.
  *
- * Each iteration: show the prompt, read a line, split it into arguments,
- * run it as a tr-shell command if it is one, otherwise as an external
- * program in a child process.
+ * Each iteration: show the prompt, read a line, expand history references,
+ * split it into arguments and run it.
  */
 #define _POSIX_C_SOURCE 200809L
 
 #include <stdio.h>
+#include <string.h>
 #include <time.h>
 
 #include "shell.h"
@@ -15,7 +15,8 @@
 #include "input.h"
 #include "parser.h"
 #include "commands.h"
-#include "executor.h"
+#include "history.h"
+#include "signals.h"
 
 struct shell g_shell = {
     .last_status      = 0,
@@ -31,17 +32,39 @@ static long elapsed_ms(const struct timespec *a, const struct timespec *b)
     return (b->tv_sec - a->tv_sec) * 1000L + (b->tv_nsec - a->tv_nsec) / 1000000L;
 }
 
+static void finish(int status, long ms)
+{
+    g_shell.last_status = status;
+    g_shell.last_duration_ms = ms;
+    g_shell.has_run = 1;
+}
+
 static void run(int argc, char **argv)
 {
     struct timespec start, end;
 
     clock_gettime(CLOCK_MONOTONIC, &start);
-    if (!commands_run(argc, argv))
-        g_shell.last_status = executor_run(argv);
+    int status = commands_exec(argc, argv);
     clock_gettime(CLOCK_MONOTONIC, &end);
+    finish(status, elapsed_ms(&start, &end));
+}
 
-    g_shell.last_duration_ms = elapsed_ms(&start, &end);
-    g_shell.has_run = 1;
+/*
+ * Replaces a leading !!, !N or !PREFIX with the line from history and shows
+ * the result, as bash does. Returns 0 if the line should not be run.
+ */
+static int expand_history(char *line, size_t size)
+{
+    char expanded[MAX_LINE];
+    int r = hist_expand(line, expanded, sizeof expanded);
+
+    if (r < 0)
+        return 0;
+    if (r > 0) {
+        snprintf(line, size, "%s", expanded);
+        puts(line);
+    }
+    return 1;
 }
 
 int main(void)
@@ -50,30 +73,47 @@ int main(void)
     char *argv[MAX_ARGS];
 
     ui_init();
+    signals_init();
+    input_init();
+    hist_init();
     if (g_shell.interactive)
         ui_banner();
 
     while (g_shell.running) {
-        if (g_shell.interactive)
-            ui_prompt();
+        const char *prompt = NULL;
 
-        int r = input_read_line(line, sizeof line);
-        if (r == 0) {           /* Ctrl+D or end of file */
+        if (g_shell.interactive) {
+            ui_prompt();
+            prompt = ui_prompt_tail(input_uses_readline());
+        }
+
+        enum input_result r = input_read_line(line, sizeof line, prompt);
+        if (r == INPUT_EOF) {           /* Ctrl+D or end of file */
             if (g_shell.interactive)
                 putchar('\n');
             break;
         }
-        if (r < 0) {            /* line too long */
-            g_shell.last_status = 1;
+        if (r == INPUT_INTERRUPTED) {   /* Ctrl+C at the prompt */
+            finish(130, 0);
+            continue;
+        }
+        if (r == INPUT_TOO_LONG) {
+            finish(1, 0);
             continue;
         }
 
-        int argc = parse_line(line, argv, MAX_ARGS);
-        if (argc < 0) {
-            g_shell.last_status = 1;
+        if (!expand_history(line, sizeof line)) {
+            finish(1, 0);
             continue;
         }
-        if (argc == 0)          /* empty line */
+        hist_add(line);
+
+        int argc = parse_line(line, argv, MAX_ARGS);
+        if (argc < 0) {
+            finish(1, 0);
+            continue;
+        }
+        if (argc == 0)                  /* empty line */
             continue;
 
         run(argc, argv);

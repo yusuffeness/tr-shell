@@ -6,11 +6,10 @@
 #include <errno.h>
 #include <limits.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-#include <sys/stat.h>
 
 #include "theme.h"
+#include "config.h"
 #include "messages.h"
 #include "ui.h"
 
@@ -18,7 +17,6 @@
 #define PATH_MAX 4096
 #endif
 
-#define CONFIG_DIR  ".trsh"
 #define THEME_FILE  "theme"
 
 /* 256-color foregrounds; supported by Windows Terminal, iTerm2, GNOME, etc. */
@@ -47,20 +45,6 @@ static const struct theme *theme_find(const char *name)
     return NULL;
 }
 
-/* Builds ~/.trsh or ~/.trsh/theme into buf. Returns 0 if HOME is unset. */
-static int config_path(char *buf, size_t size, const char *file)
-{
-    const char *home = getenv("HOME");
-
-    if (home == NULL || *home == '\0')
-        return 0;
-    if (file)
-        snprintf(buf, size, "%s/%s/%s", home, CONFIG_DIR, file);
-    else
-        snprintf(buf, size, "%s/%s", home, CONFIG_DIR);
-    return 1;
-}
-
 void theme_load(void)
 {
     char path[PATH_MAX];
@@ -83,16 +67,12 @@ void theme_load(void)
 
 static int theme_save(const char *who)
 {
-    char dir[PATH_MAX];
     char path[PATH_MAX];
 
-    if (!config_path(dir, sizeof dir, NULL) ||
-        !config_path(path, sizeof path, THEME_FILE)) {
-        ui_error(who, "%s", MSG_NO_HOME);
+    if (config_ensure_dir(who) != 0)
         return 1;
-    }
-    if (mkdir(dir, 0755) == -1 && errno != EEXIST) {
-        ui_error(who, "%s: %s", dir, msg_error(errno));
+    if (!config_path(path, sizeof path, THEME_FILE)) {
+        ui_error(who, "%s", MSG_NO_HOME);
         return 1;
     }
 

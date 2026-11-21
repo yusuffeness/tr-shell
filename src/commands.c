@@ -1,18 +1,26 @@
 /*
- * commands.c - the table of tr-shell commands, dispatch and `yardim`.
+ * commands.c - the table of tr-shell commands, dispatch, `yardim` and
+ * `zamanla`.
  */
+#define _POSIX_C_SOURCE 200809L
+
 #include <stdio.h>
 #include <string.h>
+#include <sys/resource.h>
+#include <sys/time.h>
+#include <time.h>
 
 #include "commands.h"
 #include "builtins.h"
 #include "executor.h"
+#include "history.h"
 #include "messages.h"
 #include "shell.h"
 #include "theme.h"
 #include "ui.h"
 
 static int bi_yardim(int argc, char **argv);
+static int bi_zamanla(int argc, char **argv);
 
 /* A NULL-terminated argv for an alias target. */
 #define RUN(...) ((const char *const[]){ __VA_ARGS__, NULL })
@@ -79,9 +87,13 @@ static const struct command table[] = {
           "kimim", "Kullanıcı adını gösterir"),
     BUILTIN("tarih", bi_tarih, G_SYSTEM,
             "tarih", "Tarihi ve saati Türkçe gösterir"),
+    BUILTIN("zamanla", bi_zamanla, G_SYSTEM,
+            "zamanla KOMUT [ARGÜMAN...]", "Komutu çalıştırır ve ne kadar sürdüğünü gösterir"),
 
     BUILTIN("yardim", bi_yardim, G_SHELL,
             "yardim [KOMUT]", "Komutları listeler ya da bir komutu açıklar"),
+    BUILTIN("gecmis", bi_gecmis, G_SHELL,
+            "gecmis [N]", "Önceki komutları listeler; !N ile tekrar çalıştırılır"),
     BUILTIN("tema", bi_tema, G_SHELL,
             "tema [AD]", "Temaları listeler ya da temayı değiştirir"),
     BUILTIN("temizle", bi_temizle, G_SHELL,
@@ -127,18 +139,73 @@ static int run_alias(const struct command *cmd, int argc, char **argv)
     return executor_run(expanded);
 }
 
-int commands_run(int argc, char **argv)
+int commands_exec(int argc, char **argv)
 {
     const struct command *cmd = commands_find(argv[0]);
 
     if (cmd == NULL)
-        return 0;
-
+        return executor_run(argv);
     if (cmd->kind == CMD_BUILTIN)
-        g_shell.last_status = cmd->fn(argc, argv);
-    else
-        g_shell.last_status = run_alias(cmd, argc, argv);
-    return 1;
+        return cmd->fn(argc, argv);
+    return run_alias(cmd, argc, argv);
+}
+
+size_t commands_count(void)
+{
+    return TABLE_LEN;
+}
+
+const struct command *commands_at(size_t i)
+{
+    return i < TABLE_LEN ? &table[i] : NULL;
+}
+
+/* Formats seconds Turkish style: 1,23 */
+static void print_seconds(const char *label, double s)
+{
+    long cs = (long)(s * 100 + 0.5);
+    fprintf(stderr, "%s %ld,%02ld %s", label, cs / 100, cs % 100, MSG_SECONDS);
+}
+
+static double tv_seconds(const struct timeval *tv)
+{
+    return (double)tv->tv_sec + (double)tv->tv_usec / 1e6;
+}
+
+/*
+ * `zamanla KOMUT ...`: runs the command and reports wall-clock, user and
+ * system time on stderr, like `time` in bash. CPU times come from
+ * getrusage(RUSAGE_CHILDREN), so they cover external programs only.
+ */
+static int bi_zamanla(int argc, char **argv)
+{
+    struct timespec t0, t1;
+    struct rusage r0, r1;
+
+    if (argc < 2) {
+        ui_error(argv[0], "%s %s", MSG_HELP_USAGE, "zamanla KOMUT [ARGÜMAN...]");
+        return 1;
+    }
+
+    getrusage(RUSAGE_CHILDREN, &r0);
+    clock_gettime(CLOCK_MONOTONIC, &t0);
+    int status = commands_exec(argc - 1, argv + 1);
+    clock_gettime(CLOCK_MONOTONIC, &t1);
+    getrusage(RUSAGE_CHILDREN, &r1);
+
+    double real = (double)(t1.tv_sec - t0.tv_sec) + (double)(t1.tv_nsec - t0.tv_nsec) / 1e9;
+    double user = tv_seconds(&r1.ru_utime) - tv_seconds(&r0.ru_utime);
+    double sys = tv_seconds(&r1.ru_stime) - tv_seconds(&r0.ru_stime);
+
+    fflush(stdout);
+    fputs(GRAY, stderr);
+    print_seconds(MSG_TIME_REAL, real);
+    fputs(" · ", stderr);
+    print_seconds(MSG_TIME_USER, user);
+    fputs(" · ", stderr);
+    print_seconds(MSG_TIME_SYS, sys);
+    fprintf(stderr, "%s\n", RESET);
+    return status;
 }
 
 static void print_target(const char *const *target)

@@ -24,9 +24,11 @@ Sistem
   bellek     Bellek kullanımını gösterir
   kimim      Kullanıcı adını gösterir
   tarih      Tarihi ve saati Türkçe gösterir
+  zamanla    Komutu çalıştırır ve ne kadar sürdüğünü gösterir
 
 Kabuk
   yardim     Komutları listeler ya da bir komutu açıklar
+  gecmis     Önceki komutları listeler; !N ile tekrar çalıştırılır
   tema       Temaları listeler ya da temayı değiştirir
   temizle    Ekranı temizler
   hakkinda   Sürüm ve yazar bilgisi

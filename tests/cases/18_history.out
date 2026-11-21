@@ -1,0 +1,28 @@
+   1  gecmis
+bir
+iki
+iki
+   1  gecmis
+   2  echo bir
+   3  echo iki
+   4  gecmis
+gecmis
+   1  gecmis
+   2  echo bir
+   3  echo iki
+   4  gecmis
+echo bir
+bir
+echo iki
+iki
+echo iki
+iki
+echo iki uc
+iki uc
+!99: geçmişte böyle bir komut yok
+!yok: geçmişte böyle bir komut yok
+   6  echo iki
+   7  echo iki uc
+   8  gecmis 3
+gecmis: geçersiz sayı: abc
+[exit 1]

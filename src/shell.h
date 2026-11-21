@@ -5,7 +5,7 @@
 #define TRSH_SHELL_H
 
 #define TRSH_NAME    "tr-shell"
-#define TRSH_VERSION "0.3.0"
+#define TRSH_VERSION "0.4.0"
 #define TRSH_USER    "Yusuf Enes Kütük"
 #define TRSH_URL     "https://github.com/yusuffeness/tr-shell"
 

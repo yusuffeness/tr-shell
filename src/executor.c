@@ -3,15 +3,18 @@
  */
 #define _POSIX_C_SOURCE 200809L
 
+#include <errno.h>
+#include <signal.h>
 #include <stdio.h>
 #include <string.h>
-#include <errno.h>
-#include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <unistd.h>
 
 #include "executor.h"
 #include "messages.h"
+#include "signals.h"
+#include "suggest.h"
 #include "ui.h"
 
 #define EXIT_NOT_FOUND  127   /* same as bash: command not found */
@@ -19,14 +22,20 @@
 
 static void child_exec(char *const argv[])
 {
+    signals_child();
     execvp(argv[0], argv);
 
     /* execvp only returns on failure. */
     int err = errno;
-    if (err == ENOENT)
-        ui_error(argv[0], "%s", MSG_NOT_FOUND);
-    else
+    if (err == ENOENT) {
+        const char *guess = suggest_command(argv[0]);
+        if (guess != NULL)
+            ui_error(argv[0], "%s. " MSG_DID_YOU_MEAN, MSG_NOT_FOUND, guess);
+        else
+            ui_error(argv[0], "%s", MSG_NOT_FOUND);
+    } else {
         ui_error(argv[0], "%s", msg_error(err));
+    }
     _exit(err == ENOENT ? EXIT_NOT_FOUND : EXIT_CANNOT_RUN);
 }
 
@@ -34,19 +43,26 @@ static int wait_child(pid_t pid)
 {
     int status;
 
+    /* Ctrl+C interrupts waitpid with EINTR; the child gets the signal too. */
     while (waitpid(pid, &status, 0) == -1) {
         if (errno != EINTR) {
             perror("waitpid");
             return 1;
         }
     }
+    g_sigint = 0;
 
     if (WIFEXITED(status))
         return WEXITSTATUS(status);
 
     if (WIFSIGNALED(status)) {
         int sig = WTERMSIG(status);
-        fprintf(stderr, "%s%s%s\n", RED, strsignal(sig), RESET);
+
+        /* Like bash: Ctrl+C just ends the line, a broken pipe is silent. */
+        if (sig == SIGINT)
+            fputc('\n', stderr);
+        else if (sig != SIGPIPE)
+            fprintf(stderr, "%s%s%s\n", RED, strsignal(sig), RESET);
         return 128 + sig;
     }
     return 1;

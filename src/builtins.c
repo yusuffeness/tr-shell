@@ -164,6 +164,11 @@ int bi_hakkinda(int argc, char **argv)
     printf("%s%s%s %s\n", BOLD, TRSH_NAME, RESET, TRSH_VERSION);
     printf("%s  %s\n", MSG_ABOUT_AUTHOR, TRSH_USER);
     printf("%s %s\n", MSG_ABOUT_LICENSE, "MIT");
+#ifdef HAVE_READLINE
+    printf("%s %s\n", MSG_ABOUT_EDITING, MSG_EDITING_RL);
+#else
+    printf("%s %s\n", MSG_ABOUT_EDITING, MSG_EDITING_BASIC);
+#endif
     printf("%s\n", TRSH_URL);
     return 0;
 }

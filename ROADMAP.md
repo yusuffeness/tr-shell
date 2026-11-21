@@ -7,8 +7,8 @@ The project is built in nine phases. Each phase ends with one commit and a versi
 | 1 | Infrastructure | v0.1 | ✅ Done |
 | 2 | Turkish commands | v0.2 | ✅ Done |
 | 3 | Look and feel | v0.3 | ✅ Done |
-| 4 | Usability | v0.4 | ⏳ Next |
-| 5 | Custom commands | v0.5 | |
+| 4 | Usability | v0.4 | ✅ Done |
+| 5 | Custom commands | v0.5 | ⏳ Next |
 | 6 | Shell features | v0.6 | |
 | 7 | Aliases and config | v0.7 | |
 | 8 | Scripting (optional) | v0.8 | |
@@ -42,12 +42,14 @@ The project is built in nine phases. Each phase ends with one commit and a versi
 - [x] Themes (`tema`): mavi, yesil, mor, turuncu, sade; saved in `~/.trsh/theme`
 - [x] `temizle` (clear screen)
 
-## Phase 4: Usability → v0.4
+## Phase 4: Usability → v0.4 ✅
 
-- [ ] Line editing with readline and persistent history (`gecmis`, `!N`)
-- [ ] Tab completion
-- [ ] Ctrl+C stops the running command, not the shell
-- [ ] "Did you mean …?" suggestions and `zamanla` (timing)
+- [x] Line editing with GNU readline (detected at build time; plain input without it)
+- [x] History on the arrow keys and Ctrl+R, saved in `~/.trsh/history`; `gecmis`, `!!`, `!N`, `!-N`, `!PREFIX`
+- [x] Tab completion: commands and programs in `PATH` for the first word, file names after it
+- [x] Ctrl+C drops the current line at the prompt and stops a running command, not the shell; Ctrl+\ and Ctrl+Z no longer kill or suspend the shell
+- [x] "Did you mean …?" suggestions for mistyped commands (edit distance)
+- [x] `zamanla`: wall-clock, user and system time of a command
 
 ## Phase 5: Custom commands → v0.5
 

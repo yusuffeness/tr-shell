@@ -30,14 +30,22 @@ void ui_init(void);
 void ui_shutdown(void);
 
 void ui_banner(void);
+
+/* Prints the first prompt line (user, directory, branch, time, status). */
 void ui_prompt(void);
+
+/* The second prompt line ("╰─❯ "); escape codes wrapped for readline if asked. */
+const char *ui_prompt_tail(int for_readline);
 void ui_goodbye(void);
 
 /* Clears the screen and draws the banner again (`temizle`). */
 void ui_clear(void);
 
-/* Writes the date in Turkish, e.g. "Cuma, 20 Kasım 2026 · 12:57". */
-void ui_format_date(char *buf, size_t size, int with_year);
+/*
+ * Writes the date in Turkish: "Cuma, 20 Kasım 2026 · 12:57" with the
+ * weekday, "20 Kasım 2026 · 12:57" without it.
+ */
+void ui_format_date(char *buf, size_t size, int with_weekday);
 
 /* Prints "who: message" to stderr, with "who" in red. printf-style. */
 void ui_error(const char *who, const char *fmt, ...)

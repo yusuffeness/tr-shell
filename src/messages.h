@@ -24,6 +24,14 @@
 #define MSG_UNKNOWN_HELP    "böyle bir komut yok: %s"
 #define MSG_UNKNOWN_THEME   "böyle bir tema yok: %s ('tema' ile listeleyin)"
 #define MSG_THEME_SET       "Tema: %s"
+#define MSG_DID_YOU_MEAN    "Bunu mu demek istediniz: %s?"
+#define MSG_HIST_NO_MATCH   "geçmişte böyle bir komut yok"
+#define MSG_HIST_NOT_FOUND  "geçmişte bulunamadı: %s"
+#define MSG_BAD_NUMBER      "geçersiz sayı: %s"
+
+#define MSG_TIME_REAL       "gerçek"
+#define MSG_TIME_USER       "kullanıcı"
+#define MSG_TIME_SYS        "sistem"
 
 #define MSG_HELP_TITLE      "tr-shell komutları"
 #define MSG_HELP_DETAIL     "Ayrıntı için: yardim KOMUT"
@@ -33,6 +41,9 @@
 
 #define MSG_ABOUT_AUTHOR    "Yazar:"
 #define MSG_ABOUT_LICENSE   "Lisans:"
+#define MSG_ABOUT_EDITING   "Satır düzenleme:"
+#define MSG_EDITING_RL      "readline (oklar, Tab, Ctrl+R)"
+#define MSG_EDITING_BASIC   "basit (readline olmadan derlendi)"
 
 /* Turkish text for common errno values; falls back to strerror(). */
 const char *msg_error(int errnum);

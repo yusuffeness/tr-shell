@@ -6,17 +6,17 @@ tr-shell started as an Operating Systems course assignment and is being grown in
 complete, everyday-usable shell. It is a hands-on project around the classic process
 APIs: `fork`, `execvp`, `waitpid`, `pipe`, `dup2` and signals.
 
-> **Status:** v0.3 — look and feel. See [ROADMAP.md](ROADMAP.md) for what comes next.
+> **Status:** v0.4 — usability. See [ROADMAP.md](ROADMAP.md) for what comes next.
 
 ```text
 ╭────────────────────────────────────────────────────────────────╮
 │                                                                │
 │   ████████╗██████╗ ███████╗██╗  ██╗                            │
-│   ╚══██╔══╝██╔══██╗██╔════╝██║  ██║   tr-shell 0.3.0           │
+│   ╚══██╔══╝██╔══██╗██╔════╝██║  ██║   tr-shell 0.4.0           │
 │      ██║   ██████╔╝███████╗███████║   Yusuf Enes Kütük         │
 │      ██║   ██╔══██╗╚════██║██╔══██║                            │
 │      ██║   ██║  ██║███████║██║  ██║   ~/projects/tr-shell      │
-│      ╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝   Cuma, 20 Kasım · 13:01   │
+│      ╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝   20 Kasım 2026 · 13:01    │
 │                                                                │
 │   ✦ Komutları görmek için     yardim                           │
 │   ✦ Temayı değiştirmek için   tema mor                         │
@@ -28,8 +28,8 @@ APIs: `fork`, `execvp`, `waitpid`, `pipe`, `dup2` and signals.
 ╰─❯ sleep 2
 
 ╭─ Yusuf Enes Kütük · ~/projects/tr-shell · ⎇ main · 13:01  ✓ 2,0 sn
-╰─❯ olmayan
-olmayan: komut bulunamadı
+╰─❯ listel
+listel: komut bulunamadı. Bunu mu demek istediniz: listele?
 
 ╭─ Yusuf Enes Kütük · ~/projects/tr-shell · ⎇ main · 13:01  ✗ 127
 ╰─❯
@@ -44,6 +44,11 @@ olmayan: komut bulunamadı
 - **Two-line prompt** with directory, git branch and time; ✓ or ✗ with the exit code
   after each command, and the duration of commands that take a second or more
 - **Themes:** `tema mor` switches the accent color and remembers it
+- **Line editing** with readline: history on the arrow keys and Ctrl+R, kept between
+  sessions; Tab completes commands and file names; `gecmis`, `!!`, `!N`
+- **Ctrl+C** drops the line you are typing or stops the running command — never the
+  shell itself
+- **"Did you mean …?"** when a command name has a typo
 - **Turkish commands** next to the usual ones — `ls`, `git`, `gcc` and everything else
   in your `PATH` still work
 - **Built-in help:** `yardim` lists every command, `yardim KOMUT` explains one
@@ -75,7 +80,9 @@ olmayan: komut bulunamadı
 | | `bellek` | Memory usage | `free -h` |
 | | `kimim` | Current user | `whoami` |
 | | `tarih` | Date and time in Turkish | builtin |
+| | `zamanla CMD...` | Run a command and show how long it took | builtin |
 | Shell | `yardim [CMD]` | Help | builtin |
+| | `gecmis [N]` | Command history; rerun with `!N`, `!!` or `!PREFIX` | builtin |
 | | `tema [NAME]` | List themes or switch: `mavi`, `yesil`, `mor`, `turuncu`, `sade` | builtin |
 | | `temizle` | Clear the screen | builtin |
 | | `hakkinda` | Version and author | builtin |
@@ -87,6 +94,15 @@ Extra arguments are passed through, so `listele -la` runs `ls --color=auto -la`.
 ## Requirements
 
 Linux, macOS or WSL with a C11 compiler (gcc or clang) and `make`.
+
+GNU readline is optional but recommended: it adds line editing, history on the arrow
+keys and Tab completion. The Makefile uses it automatically when it is installed.
+
+```bash
+sudo apt install build-essential libreadline-dev   # Debian, Ubuntu, WSL
+```
+
+`hakkinda` shows which mode the shell was built in; `make READLINE=0` builds without it.
 
 ## Build and run
 
@@ -112,14 +128,19 @@ src/
   builtins.c    commands that run inside the shell (gec, geri, tarih ...)
   executor.c    fork / exec / wait
   parser.c      splitting a line into arguments
-  input.c       reading a line
+  input.c       reading a line (readline or plain)
+  history.c     history, `gecmis` and !-expansion
+  completion.c  Tab completion
+  signals.c     Ctrl+C, Ctrl+\ and Ctrl+Z handling
+  suggest.c     "did you mean" suggestions
+  config.c      paths under ~/.trsh
   ui.c          alternate screen, banner, prompt, error output
   theme.c       color themes and the `tema` command
   git.c         git branch for the prompt
   messages.c/h  all user-facing text
 tests/
   run.sh        test runner
-  cases/        *.in inputs and *.out expected outputs
+  cases/        *.in inputs, *.out expected outputs, optional *.sed filters
 ```
 
 ## Adding a command
@@ -138,7 +159,8 @@ the table automatically.
 ## Tests
 
 Each `tests/cases/NAME.in` is fed to the shell; its output and exit code are compared
-with `NAME.out`.
+with `NAME.out`. An optional `NAME.sed` filter blanks out parts that change between
+runs, such as timings.
 
 ```bash
 bash tests/run.sh          # all tests
