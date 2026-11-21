@@ -33,8 +33,10 @@ else
 fi
 
 # A fixed environment keeps the output identical on every machine.
-# Each test gets a fresh, empty home directory.
+# Each test gets a fresh, empty home directory, and new files always get the
+# same permissions (CI runners and desktops use different umasks).
 TEST_HOME=/tmp/trsh-home
+umask 022
 
 run_trsh() {
     rm -rf "$TEST_HOME" && mkdir -p "$TEST_HOME"
@@ -73,6 +75,11 @@ for in_file in "$CASES"/*.in; do
     else
         echo "${R}FAIL${N}    $name"
         sed 's/^/        /' "$diff_file"
+        # On GitHub Actions, also report the failure as an annotation.
+        if [ -n "${GITHUB_ACTIONS:-}" ]; then
+            body=$(head -n 30 "$diff_file" | sed -e 's/%/%25/g' | awk '{printf "%s%%0A", $0}')
+            echo "::error file=tests/cases/$name.in,title=Test $name failed::$body"
+        fi
         fail=$((fail + 1))
     fi
 done

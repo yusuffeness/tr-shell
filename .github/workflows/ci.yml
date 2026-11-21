@@ -23,7 +23,7 @@ jobs:
         cc: [gcc, clang]
         readline: [1, 0]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Install dependencies
         run: sudo apt-get update && sudo apt-get install -y libreadline-dev clang
@@ -41,7 +41,7 @@ jobs:
     name: AddressSanitizer + UBSan
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Install dependencies
         run: sudo apt-get update && sudo apt-get install -y libreadline-dev
@@ -63,7 +63,7 @@ jobs:
     name: make install
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Install dependencies
         run: sudo apt-get update && sudo apt-get install -y libreadline-dev
